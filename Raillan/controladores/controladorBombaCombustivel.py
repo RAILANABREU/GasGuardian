@@ -19,11 +19,12 @@ class ControladorBombaCombustivel:
 
     def adicionar_bomba(self, autoAbastecimento, tipoCombustivel, bombaAtiva, tanque, nomeBomba):
         nova_bomba = BombaCombustivel(autoAbastecimento, tipoCombustivel, bombaAtiva, tanque, nomeBomba)
+        print(autoAbastecimento, tipoCombustivel, bombaAtiva, tanque, nomeBomba)
         try:
             with self.conn:
                 self.cursor.execute(
                     "INSERT INTO Bombas (autoAbastecimento, tipoCombustivel_nome, bombaAtiva, tanque_id, nomeBomba) VALUES (?, ?, ?, ?, ?)",
-                    (nova_bomba.autoAbastecimento, nova_bomba.tipoCombustivel[0].nome, nova_bomba.bombaAtiva, nova_bomba.tanque.id, nova_bomba.nomeBomba)
+                    (nova_bomba.autoAbastecimento, nova_bomba.tipoCombustivel, nova_bomba.bombaAtiva, nova_bomba.tanque, nova_bomba.nomeBomba)
                 )
                 self.conn.commit()
                 return True
@@ -107,13 +108,13 @@ class ControladorBombaCombustivel:
                     update_values.append(autoAbastecimento)
                 if tipoCombustivel is not None:
                     update_query += " tipoCombustivel_nome = ?,"
-                    update_values.append(tipoCombustivel.nome)
+                    update_values.append(tipoCombustivel)
                 if bombaAtiva is not None:
                     update_query += " bombaAtiva = ?,"
                     update_values.append(bombaAtiva)
                 if tanque is not None:
                     update_query += " tanque_id = ?,"
-                    update_values.append(tanque.id)
+                    update_values.append(tanque)
                 if nomeBomba is not None:
                     update_query += " nomeBomba = ?,"
                     update_values.append(nomeBomba)

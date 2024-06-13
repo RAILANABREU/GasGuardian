@@ -2,9 +2,9 @@ from entidades.tipoCombustivel import TipoCombustivel
 from entidades.tanqueCombustivel import TanqueCombustivel
 
 class BombaCombustivel:
-    def __init__(self, autoAbastecimento: bool, tipoCombustivel: list , bombaAtiva: bool, TanqueCombustivel: TanqueCombustivel, nomeBomba: str):
+    def __init__(self, autoAbastecimento: bool, tipoCombustivel: str , bombaAtiva: bool, TanqueCombustivel: TanqueCombustivel, nomeBomba: str):
         self.__autoAbastecimento = autoAbastecimento
-        self.__tipoCombustivel = [TipoCombustivel]
+        self.__tipoCombustivel = tipoCombustivel
         self.__bombaAtiva = bombaAtiva
         self.__tanque = TanqueCombustivel
         self.__nomeBomba = nomeBomba
