@@ -28,7 +28,6 @@ class ControladorAbastecimento:
 
         # Verificar se o tanque tem capacidade para o abastecimento
         tanque = self.controlador_tanque_combustivel.buscar_tanque(bomba[5])
-        print(tanque)
         if not tanque or tanque[4] < litros:
             raise Exception("O tanque não tem capacidade suficiente para o abastecimento solicitado.")
 
@@ -55,6 +54,7 @@ class ControladorAbastecimento:
                     (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel)
                 )
                 self.conn.commit()
+                return True
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erro ao registrar Abastecimento: {e}")
         return True

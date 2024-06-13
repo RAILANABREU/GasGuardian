@@ -100,6 +100,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             self.btn_alterar.configure(state=tk.DISABLED)
             self.btn_excluir.configure(state=tk.DISABLED)
 
+
     def tela_alterar_bomba(self):
         if self.selected_row:
             self.modal_alterar_bomba(self.selected_row)
@@ -125,12 +126,11 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         self.labels = ["Nome", "Auto Abastecimento", "Tipo de Combustível", "Bomba Ativa", "Tanque"]
         self.entries = {}
 
-        combustiveis = self.controladorTipoCombustivel.listar_tipo_combustivel()
-        nomes_combustiveis = [combustivel[0] for combustivel in combustiveis]
-
         global nomes_tanques
+        global nomes_combustiveis
         tanques = self.controladorTanqueCombustivel.listar_tanques()
         nomes_tanques = {tanque[0]: tanque[6] for tanque in tanques}  # Dicionário com nomes dos tanques e seus IDs
+        nomes_combustiveis = {combustivel[0]:combustivel[3] for combustivel in tanques}
 
         for i, label in enumerate(self.labels):
             lbl = ctk.CTkLabel(self.modal, text=label)
@@ -138,12 +138,13 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar(value=dados_bomba[i])
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, values=nomes_combustiveis)
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='disabled', values=list(nomes_combustiveis.values()))
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar(value=dados_bomba[i])
                 entry = ttk.Combobox(self.modal, textvariable=self.tanque_var, values=list(nomes_tanques.keys()))
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
+                entry.bind("<<ComboboxSelected>>", self.update_combustivel_entry)
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)
                 entry.insert(0, dados_bomba[i])
@@ -182,6 +183,12 @@ class TelaBombaCombustivel(ctk.CTkFrame):
                 Mostra_mensagem("Erro ao atualizar a bomba.", tipo='erro')
         except Exception as e:
             Mostra_mensagem(f"Erro ao atualizar a bomba: {e}", tipo='erro')
+
+    def update_combustivel_entry(self, event):
+        # Atualiza o campo de tipo de combustível quando uma bomba é selecionada
+        tanque = self.tanque_var.get()
+        if tanque:
+            self.combustivel_var.set(nomes_combustiveis[tanque])
 
     def tela_excluir_bomba(self):
         if self.selected_row:
@@ -234,31 +241,39 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         y = (self.modal.winfo_screenheight() // 2) - (height // 2)
         self.modal.geometry(f'{width}x{height}+{x}+{y}')
 
+        global nomes_tanques
+        global nomes_combustiveis
+        tanques = self.controladorTanqueCombustivel.listar_tanques()
+        nomes_tanques = {tanque[0]: tanque[6] for tanque in tanques}  # Dicionário com nomes dos tanques e seus IDs
+        nomes_combustiveis = {combustivel[0]:combustivel[3] for combustivel in tanques}
+
         title_label = ctk.CTkLabel(self.modal, text="Cadastrar Nova Bomba", font=("Arial", 25, "bold"))
         title_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky='w')
 
         self.labels = ["Nome", "Auto Abastecimento", "Tipo de Combustível", "Bomba Ativa", "Tanque"]
         self.entries = {}
 
-        combustiveis = self.controladorTipoCombustivel.listar_tipo_combustivel()
-        nomes_combustiveis = {combustivel[0]: combustivel[1] for combustivel in combustiveis}
-
-        tanques = self.controladorTanqueCombustivel.listar_tanques()
-        nomes_tanques = {tanque[0]: tanque[6] for tanque in tanques}
-
         for i, label in enumerate(self.labels):
             lbl = ctk.CTkLabel(self.modal, text=label)
             lbl.grid(row=i+1, column=0, padx=10, pady=5, sticky='e')
 
-            if label == "Tipo de Combustível":
+            if label == "Auto Abastecimento":
+                self.is_gestor_var = ctk.StringVar(value="off")
+                entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue=1, offvalue=0)
+
+            elif label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar()
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, values=nomes_combustiveis.keys())
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='disabled', values=list(nomes_combustiveis.values()))
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
 
+            elif label == "Bomba Ativa":
+                self.is_gestor_var = ctk.StringVar(value="off")
+                entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue="on", offvalue="off")
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar()
                 entry = ttk.Combobox(self.modal, textvariable=self.tanque_var, values=list(nomes_tanques.keys()))
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
+                entry.bind("<<ComboboxSelected>>", self.update_combustivel_entry)
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
@@ -280,6 +295,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         bombaAtiva = self.entries["Bomba Ativa"].get()
         tanque_nome = self.entries["Tanque"].get()
         tanque_id = nomes_tanques[tanque_nome]
+        print(tanque_id)
 
         if not nomeBomba or not autoAbastecimento or not tipoCombustivel or not bombaAtiva or not tanque_id:
             Mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')

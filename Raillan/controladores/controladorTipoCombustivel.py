@@ -24,6 +24,7 @@ class ControladorTipoCombustivel:
                 self.cursor.execute("INSERT INTO TipoCombustivel (nome, preco) VALUES ( ?, ?)",
                                     (tipoCombustivel.nome, tipoCombustivel.preco))
                 self.conn.commit()
+                return True
         except sqlite3.IntegrityError as e:
             # Se houver uma violação de integridade (como chave duplicada), lança uma exceção
             if 'UNIQUE constraint failed: TipoCombustivel.nome' in str(e):

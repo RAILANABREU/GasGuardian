@@ -1,12 +1,10 @@
-
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+import re
 
 from controladores.controladorUsuario import ControladorUsuario
-
-
 
 
 class TelaUsuario(ctk.CTkFrame):
@@ -17,7 +15,7 @@ class TelaUsuario(ctk.CTkFrame):
         self.controladorUsuario = ControladorUsuario()
         self.Criar_tela_usuario()
 
-    def mostra_mensagem(mensagem, tipo='erro'):
+    def mostra_mensagem(self, mensagem, tipo='erro'):
         if tipo == 'erro':
             messagebox.showerror("Erro", mensagem, icon='error')
         elif tipo == 'info':
@@ -49,7 +47,7 @@ class TelaUsuario(ctk.CTkFrame):
                 self.mostra_mensagem("Nenhuma usuario cadastrada.", tipo='info')
                 return
         except Exception as e:
-            self.mostra_mensagem(f"Erro ao listar as usuarios: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao listar os usuarios: {e}", tipo='erro')
             return
 
         self.criar_tabela(usuarios, self.cabecalhos)
@@ -103,7 +101,6 @@ class TelaUsuario(ctk.CTkFrame):
         if self.selected_row:
             self.modal_alterar_usuario(self.selected_row)
 
-
     def modal_alterar_usuario(self, dados_usuario):
         self.modal = tk.Toplevel(self)
         self.modal.title("Alterar Usuário")
@@ -122,7 +119,7 @@ class TelaUsuario(ctk.CTkFrame):
         title_label = ctk.CTkLabel(self.modal, text="Alterar Usuário", font=("Arial", 25, "bold"))
         title_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky='w')
 
-        self.labels = ["Nome", "CPF", "Email", "Telefone", "É Gestor"]
+        self.labels = ["Nome", "CPF", "Telefone", "Email", "É Gestor"]
         self.entries = {}
 
         for i, label in enumerate(self.labels):
@@ -134,6 +131,11 @@ class TelaUsuario(ctk.CTkFrame):
                 entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue="on", offvalue="off")
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)
+                entry.insert(0, dados_usuario[i])
+                if label == "CPF":
+                    entry.bind("<KeyRelease>", self.format_cpf)
+                if label == "Telefone":
+                    entry.bind("<KeyRelease>", self.format_telefone)
 
             entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             self.entries[label] = entry
@@ -153,12 +155,16 @@ class TelaUsuario(ctk.CTkFrame):
         telefone = self.entries["Telefone"].get()
         identificador_usuario = self.selected_row[0]
 
+        # Remover caracteres especiais do CPF e telefone
+        cpf = re.sub(r'\D', '', cpf)
+        telefone = re.sub(r'\D', '', telefone)
+
         if not nome or not cpf or not email or not telefone:
             self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
 
         try:
-            resultado = self.controladorUsuario.atualizar_usuario(identificador_usuario, nome, cpf, email, telefone)
+            resultado = self.controladorUsuario.atualizar_usuario(identificador_usuario, cpf, email, nome, telefone)
             if resultado:
                 self.mostra_mensagem("Usuário atualizado com sucesso!", tipo='info')
                 self.modal.destroy()
@@ -231,9 +237,13 @@ class TelaUsuario(ctk.CTkFrame):
 
             if label == "É Gestor":
                 self.is_gestor_var = ctk.StringVar(value="off")
-                entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue="on", offvalue="off")
+                entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue=1, offvalue=0)
             else:
-                entry = ctk.CTkEntry(self.modal, width=120)
+                entry = ctk.CTkEntry(self.modal, width=120, placeholder_text=f"{label.lower()}")
+                if label == "CPF":
+                    entry.bind("<KeyRelease>", self.format_cpf)
+                if label == "Telefone":
+                    entry.bind("<KeyRelease>", self.format_telefone)
 
             entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             self.entries[label] = entry
@@ -253,7 +263,11 @@ class TelaUsuario(ctk.CTkFrame):
         telefone = self.entries["Telefone"].get()
         senha = self.entries["Senha"].get()
         confirmar_senha = self.entries["Confirmar Senha"].get()
-        is_gestor = self.is_gestor_var.get() == "on"
+        is_gestor = self.is_gestor_var.get()
+
+            # Remover caracteres especiais do CPF e telefone
+        cpf = re.sub(r'\D', '', cpf)
+        telefone = re.sub(r'\D', '', telefone)
 
         if not nome or not cpf or not email or not telefone or not senha or not confirmar_senha:
             self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
@@ -264,7 +278,8 @@ class TelaUsuario(ctk.CTkFrame):
             return
 
         try:
-            resultado = self.controladorUsuario.adicionar_usuario(nome, cpf, email, telefone, senha, is_gestor)
+            print(nome, cpf, email, telefone, senha, is_gestor)
+            resultado = self.controladorUsuario.adicionar_usuario( cpf, email, nome, telefone, senha, is_gestor)
             if resultado:
                 self.mostra_mensagem("Novo usuário cadastrado com sucesso!", tipo='info')
                 self.modal.destroy()
@@ -273,6 +288,33 @@ class TelaUsuario(ctk.CTkFrame):
                 self.mostra_mensagem("Erro ao cadastrar o usuário.", tipo='erro')
         except Exception as e:
             self.mostra_mensagem(f"Erro ao cadastrar o usuário: {e}", tipo='erro')
+
+    def format_cpf(self, event):
+        entry = event.widget
+        cpf = re.sub(r'\D', '', entry.get())
+        formatted_cpf = cpf
+        if len(cpf) > 3:
+            formatted_cpf = f"{cpf[:3]}.{cpf[3:6]}"
+        if len(cpf) > 6:
+            formatted_cpf = f"{formatted_cpf}.{cpf[6:9]}"
+        if len(cpf) > 9:
+            formatted_cpf = f"{formatted_cpf}-{cpf[9:11]}"
+        entry.delete(0, tk.END)
+        entry.insert(0, formatted_cpf)
+
+    def format_telefone(self, event):
+        entry = event.widget
+        telefone = re.sub(r'\D', '', entry.get())
+        formatted_telefone = telefone
+        if len(telefone) > 2:
+            formatted_telefone = f"({telefone[:2]}) {telefone[2:7]}"
+        if len(telefone) > 7:
+            formatted_telefone = f"{formatted_telefone}-{telefone[7:11]}"
+        elif len(telefone) > 2:
+            formatted_telefone = f"({telefone[:2]}) {telefone[2:]}"
+        entry.delete(0, tk.END)
+        entry.insert(0, formatted_telefone)
+
 
 
 if __name__ == '__main__':

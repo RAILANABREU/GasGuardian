@@ -26,6 +26,7 @@ class ControladorBombaCombustivel:
                     (nova_bomba.autoAbastecimento, nova_bomba.tipoCombustivel[0].nome, nova_bomba.bombaAtiva, nova_bomba.tanque.id, nova_bomba.nomeBomba)
                 )
                 self.conn.commit()
+                return True
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erro ao adicionar bomba: {e}")
 

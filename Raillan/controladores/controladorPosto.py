@@ -27,6 +27,7 @@ class ControladorPosto:
                 self.cursor.execute("INSERT INTO Posto (cnpj, chavePix, nomePosto) VALUES (?, ?, ?)",
                                     (posto.cnpj, posto.chavePix, posto.nomePosto))
                 self.conn.commit()
+                return True
         except sqlite3.IntegrityError as e:
             # Se houver uma violação de integridade (como chave duplicada), lança uma exceção
             if 'UNIQUE constraint failed: Posto.cnpj' in str(e):
