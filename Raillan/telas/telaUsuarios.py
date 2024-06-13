@@ -133,6 +133,7 @@ class TelaUsuario(ctk.CTkFrame):
                 entry = ctk.CTkEntry(self.modal, width=120)
                 entry.insert(0, dados_usuario[i])
                 if label == "CPF":
+                    entry.configure(state='disabled')
                     entry.bind("<KeyRelease>", self.format_cpf)
                 if label == "Telefone":
                     entry.bind("<KeyRelease>", self.format_telefone)
@@ -153,18 +154,16 @@ class TelaUsuario(ctk.CTkFrame):
         cpf = self.entries["CPF"].get()
         email = self.entries["Email"].get()
         telefone = self.entries["Telefone"].get()
-        identificador_usuario = self.selected_row[0]
-
+        is_gestor = self.is_gestor_var.get()
         # Remover caracteres especiais do CPF e telefone
         cpf = re.sub(r'\D', '', cpf)
         telefone = re.sub(r'\D', '', telefone)
-
         if not nome or not cpf or not email or not telefone:
             self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
 
         try:
-            resultado = self.controladorUsuario.atualizar_usuario(identificador_usuario, cpf, email, nome, telefone)
+            resultado = self.controladorUsuario.atualizar_usuario(cpf, email, nome, telefone, is_gestor)
             if resultado:
                 self.mostra_mensagem("Usuário atualizado com sucesso!", tipo='info')
                 self.modal.destroy()
