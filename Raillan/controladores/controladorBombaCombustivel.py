@@ -1,12 +1,18 @@
 import sqlite3
+import os
 from entidades.tipoCombustivel import TipoCombustivel
 from entidades.tanqueCombustivel import TanqueCombustivel
 from entidades.bombaCombustivel import BombaCombustivel
 from controladores.controladorTanqueCombustivel import ControladorTanqueCombustivel
 
+
+diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+diretorio_pai = os.path.dirname(diretorio_atual)
+
+
 class ControladorBombaCombustivel:
     def __init__(self):
-        self.conn = sqlite3.connect('/Users/railanabreu/Documents/Projects/GasGuardian/Raillan/dados/DADOS.sqlite')
+        self.conn = sqlite3.connect(diretorio_pai + '/dados/DADOS.sqlite')
         self.cursor = self.conn.cursor()
         self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.conn.commit()
