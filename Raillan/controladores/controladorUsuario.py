@@ -80,13 +80,14 @@ class ControladorUsuario:
             raise ValueError("Erro ao alterar senha.")
         
     def login_cpf(self, cpf, senha):
+        
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        self.cursor.execute("SELECT * FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash))
+        self.cursor.execute("SELECT nome, isgestor FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash))
         return self.cursor.fetchone()
     
     def login_email(self, email, senha):
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        self.cursor.execute("SELECT * FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash))
+        self.cursor.execute("SELECT nome, isgestor FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash))
         return self.cursor.fetchone()
     
 

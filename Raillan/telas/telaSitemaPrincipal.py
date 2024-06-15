@@ -9,6 +9,8 @@ from .telaBombaCombustivel import TelaBombaCombustivel  # Importação da classe
 from .TelaPosto import TelaPosto  # Importação da classe TelaPosto
 from .telaAbastecimento import TelaAbastecimento  # Importação da classe TelaAbastecimento
 from .telaUsuarios import TelaUsuario  # Importação da classe TelaUsuario
+from .telaTipoCombustivel import TelaTipoCombustivel  # Importação da classe TelaTipoCombustivel
+from .TelaLogin import TelaLogin  # Importação da classe TelaLogin
 
 class MenuPrincipal(ctk.CTk):
     def __init__(self):
@@ -35,6 +37,8 @@ class MenuPrincipal(ctk.CTk):
         # Bind para mudança de tema
         ctk.set_appearance_mode("system")
         self.update_text_colors()
+        self.tela_login = TelaLogin()
+        self.tela_login.modal_login()
 
     def configure_grid(self):
         self.grid_columnconfigure(0, weight=0, minsize=300)  # Largura fixa do menu
@@ -81,12 +85,14 @@ class MenuPrincipal(ctk.CTk):
 
     def create_frames(self):
         # Adicionar os frames que você deseja exibir ao clicar nos submenus
+
        
         self.frames["tanques"] = TelaTanqueCombustivel(self)
         self.frames["bombas"] = TelaBombaCombustivel(self)
         self.frames["posto"] = TelaPosto(self)
         self.frames["abastecimento"] = TelaAbastecimento(self)
         self.frames["funcionarios"] = TelaUsuario(self)
+        self.frames["combustiveis"] = TelaTipoCombustivel(self)
 
         for frame in self.frames.values():
             frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
