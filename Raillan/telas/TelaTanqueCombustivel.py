@@ -100,8 +100,8 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
             self.tree.column(col, anchor="center")
 
         # Configurando as tags para cores alternadas
-        self.tree.tag_configure('evenrow', background='#242424')
-        self.tree.tag_configure('oddrow', background='#2D2E30')
+        self.tree.tag_configure('evenrow', background='#F5F5F5')
+        self.tree.tag_configure('oddrow', background='#E8E8E8')
 
         # Inserindo os dados na Treeview com cores alternadas
         for i, linha in enumerate(dados_formatados):

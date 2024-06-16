@@ -77,8 +77,8 @@ class TelaUsuario(ctk.CTkFrame):
             self.tree.heading(col, text=col)
             self.tree.column(col, anchor="center")
 
-        self.tree.tag_configure('evenrow', background='#242424')
-        self.tree.tag_configure('oddrow', background='#2D2E30')
+        self.tree.tag_configure('evenrow', background='#F5F5F5')
+        self.tree.tag_configure('oddrow', background='#E8E8E8')
 
         for i, linha in enumerate(dados):
             if i % 2 == 0:
@@ -175,7 +175,7 @@ class TelaUsuario(ctk.CTkFrame):
 
     def tela_excluir_usuario(self):
         if self.selected_row:
-            identificador_usuario = self.selected_row[0]
+            identificador_usuario = self.selected_row[1]
             try:
                 resultado = self.controladorUsuario.remover_usuario(identificador_usuario)
                 if resultado:

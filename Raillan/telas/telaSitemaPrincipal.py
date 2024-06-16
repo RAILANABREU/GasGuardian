@@ -10,11 +10,11 @@ from .TelaPosto import TelaPosto  # Importação da classe TelaPosto
 from .telaAbastecimento import TelaAbastecimento  # Importação da classe TelaAbastecimento
 from .telaUsuarios import TelaUsuario  # Importação da classe TelaUsuario
 from .telaTipoCombustivel import TelaTipoCombustivel  # Importação da classe TelaTipoCombustivel
-from .TelaLogin import TelaLogin  # Importação da classe TelaLogin
 
 class MenuPrincipal(ctk.CTk):
-    def __init__(self):
+    def __init__(self, is_gestor):
         super().__init__()
+        self.is_gestor = is_gestor
 
         self.title("Sistema de Gerenciamento")
         self.geometry("1200x800")
@@ -35,10 +35,9 @@ class MenuPrincipal(ctk.CTk):
         self.update_text_colors()
 
         # Bind para mudança de tema
-        ctk.set_appearance_mode("system")
+        ctk.set_appearance_mode("light")
         self.update_text_colors()
-        self.tela_login = TelaLogin()
-        self.tela_login.modal_login()
+
 
     def configure_grid(self):
         self.grid_columnconfigure(0, weight=0, minsize=300)  # Largura fixa do menu
@@ -61,21 +60,22 @@ class MenuPrincipal(ctk.CTk):
         style = ttk.Style()
         style.configure("Treeview", rowheight=50)
 
-        # Adicionando itens ao menu
         icon_path_base = "/Users/railanabreu/Documents/Projects/GasGuardian/Raillan/telas/Icones/"
-        self.add_menu_item("", "abastecimento", "Abastecimento", icon_path_base + "fuel-pump.png", True)
-        # Adicionando item "Cadastro" com ícone
-        cadastro_id = self.add_menu_item("", "cadastro", "Cadastro", icon_path_base + "cadastro.png", True)
-        self.add_menu_item(cadastro_id, "funcionarios", "Funcionários", icon_path_base + "Funcionarios.png")
-        self.add_menu_item(cadastro_id, "tanques", "Tanques", icon_path_base + "tanquesCombustivel.png")
-        self.add_menu_item(cadastro_id, "combustiveis", "Combustíveis", icon_path_base + "oil.png")
-        self.add_menu_item(cadastro_id, "bombas", "Bombas", icon_path_base + "bomba-de-gasolina.png")
-        self.add_menu_item(cadastro_id, "posto", "Posto", icon_path_base + "posto.png")
 
-        self.add_menu_item("", "relatorios", "Relatórios", icon_path_base + "relatorios.png", True)
-
-        estoque_id = self.add_menu_item("", "Estoque", "Estoque", icon_path_base + "oil-tank.png", True)
-        self.add_menu_item(estoque_id, "Renovacao", "Renovacão", icon_path_base + "oil-tanker.png")
+        if self.is_gestor == 1:
+            # Adicionando itens ao menu
+            self.add_menu_item("", "abastecimento", "Abastecimento", icon_path_base + "fuel-pump.png", True)
+            cadastro_id = self.add_menu_item("", "cadastro", "Cadastro", icon_path_base + "cadastro.png", True)
+            self.add_menu_item(cadastro_id, "funcionarios", "Funcionários", icon_path_base + "Funcionarios.png")
+            self.add_menu_item(cadastro_id, "tanques", "Tanques", icon_path_base + "tanquesCombustivel.png")
+            self.add_menu_item(cadastro_id, "combustiveis", "Combustíveis", icon_path_base + "oil.png")
+            self.add_menu_item(cadastro_id, "bombas", "Bombas", icon_path_base + "bomba-de-gasolina.png")
+            self.add_menu_item(cadastro_id, "posto", "Posto", icon_path_base + "posto.png")
+            self.add_menu_item("", "relatorios", "Relatórios", icon_path_base + "relatorios.png", True)
+            estoque_id = self.add_menu_item("", "Estoque", "Estoque", icon_path_base + "oil-tank.png", True)
+            self.add_menu_item(estoque_id, "Renovacao", "Renovacão", icon_path_base + "oil-tanker.png")
+        else:
+            self.add_menu_item("", "abastecimento", "Abastecimento", icon_path_base + "fuel-pump.png", True)
 
         # Configuração das tags
         self.tree_menu.tag_configure("main", font=("Arial", 30, "bold"))
@@ -86,7 +86,6 @@ class MenuPrincipal(ctk.CTk):
     def create_frames(self):
         # Adicionar os frames que você deseja exibir ao clicar nos submenus
 
-       
         self.frames["tanques"] = TelaTanqueCombustivel(self)
         self.frames["bombas"] = TelaBombaCombustivel(self)
         self.frames["posto"] = TelaPosto(self)
@@ -101,7 +100,6 @@ class MenuPrincipal(ctk.CTk):
     def add_menu_item(self, parent, id, text, icon_path, is_main=False):
         icon = self.get_icon(icon_path)
         if icon:
-            # Adiciona o texto com um espaçamento à esquerda para o ícone
             return self.tree_menu.insert(parent, "end", id, text=" " + text, image=icon, tags=("main" if is_main else "sub",))
         else:
             return self.tree_menu.insert(parent, "end", id, text=text, tags=("main" if is_main else "sub",))
@@ -114,12 +112,10 @@ class MenuPrincipal(ctk.CTk):
             self.images.append(photo)  # Adiciona a imagem à lista para evitar coleta de lixo
             return photo
         else:
-            print(f"Ícone não encontrado: {path}")
             return None
 
     def on_menu_select(self, event):
         selected_item = self.tree_menu.selection()[0]
-        print(f"Selecionado: {selected_item}")
         self.show_frame(selected_item)
 
     def show_frame(self, frame_name):
@@ -155,6 +151,6 @@ class MenuPrincipal(ctk.CTk):
         self.update_text_colors()
 
 if __name__ == '__main__':
-    ctk.set_appearance_mode("system")  # Usar o modo do sistema
-    app = MenuPrincipal()
+    ctk.set_appearance_mode("light")  # Usar o modo do sistema
+    app = MenuPrincipal(is_gestor=True)  # Alterar conforme necessário para testes
     app.mainloop()

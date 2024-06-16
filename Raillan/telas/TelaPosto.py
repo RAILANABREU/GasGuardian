@@ -24,21 +24,24 @@ class TelaPosto(ctk.CTkFrame):
         self.clear_frame()
 
         top_frame = ctk.CTkFrame(self)
-        top_frame.pack(fill="x", pady=20, padx=20)        
+        top_frame.pack(fill="x", pady=20, padx=20)     
+
+        title_frame = ctk.CTkFrame(top_frame, corner_radius=15, fg_color="#CFCFCF")
+        title_frame.pack(side="left", padx=10, pady=10)   
         
-        ctk.CTkLabel(top_frame, text="Gerenciamento de Postos", font=("Arial", 25, "bold")).pack(side="left")
+        ctk.CTkLabel(title_frame, text="Gerenciamento de Postos", font=("Arial", 25, "bold")).pack(side="left")
 
         btn_frame = ctk.CTkFrame(top_frame)
         btn_frame.pack(side="right")
 
         btn_add = ctk.CTkButton(btn_frame, text="+", command=self.modal_cadastrar_posto)
-        btn_add.pack(side="left", padx=5)
+        btn_add.pack(side="left", padx=1)
 
         self.btn_alterar = ctk.CTkButton(btn_frame, text="Alterar", command=self.tela_alterar_posto, state=tk.DISABLED)
-        self.btn_alterar.pack(side="left", padx=5)
+        self.btn_alterar.pack(side="left", padx=1)
 
         self.btn_excluir = ctk.CTkButton(btn_frame, text="Excluir", command=self.tela_excluir_posto, state=tk.DISABLED)
-        self.btn_excluir.pack(side="left", padx=5)
+        self.btn_excluir.pack(side="left", padx=1)
         try:
             posto = self.controlador.listar_posto()
             if not posto:
@@ -85,8 +88,8 @@ class TelaPosto(ctk.CTkFrame):
             self.tree.column(col, anchor="center")
 
         # Configurando as tags para cores alternadas
-        self.tree.tag_configure('evenrow', background='#242424')
-        self.tree.tag_configure('oddrow', background='#2D2E30')
+        self.tree.tag_configure('evenrow', background='#F5F5F5')
+        self.tree.tag_configure('oddrow', background='#E8E8E8')
 
         # Inserindo os dados na Treeview com cores alternadas
         for i, linha in enumerate(dados):

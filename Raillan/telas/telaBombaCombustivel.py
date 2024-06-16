@@ -80,8 +80,8 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             self.tree.heading(col, text=col)
             self.tree.column(col, anchor="center")
 
-        self.tree.tag_configure('evenrow', background='#242424')
-        self.tree.tag_configure('oddrow', background='#2D2E30')
+        self.tree.tag_configure('evenrow', background='#F5F5F5')
+        self.tree.tag_configure('oddrow', background='#E8E8E8')
 
         for i, linha in enumerate(dados):
             if i % 2 == 0:
