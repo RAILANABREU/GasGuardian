@@ -58,3 +58,9 @@ class ControladorAbastecimento:
         except sqlite3.IntegrityError as e:
             raise ValueError(f"Erro ao registrar Abastecimento: {e}")
         return True
+
+    def listar_abastecimentos(self):
+        self.cursor.execute("SELECT * FROM Abastecimentos")
+        return self.cursor.fetchall()
+
+        

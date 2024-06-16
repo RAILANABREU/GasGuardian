@@ -7,11 +7,7 @@ from tkinter import ttk
 from tkinter import messagebox
 
 
-def Mostra_mensagem(mensagem, tipo='erro'):
-    if tipo == 'erro':
-        messagebox.showerror("Erro", mensagem, icon='error')
-    elif tipo == 'info':
-        messagebox.showinfo("Informação", mensagem, icon='info')
+
 
 
 class TelaBombaCombustivel(ctk.CTkFrame):
@@ -22,9 +18,15 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.selected_row = None
         self.cabecalhos = ["Nome", "Auto Abastecimento", "Tipo de Combustível", "Bomba Ativa", "Tanque Nome"]
-        self.tela_listar_bombas()
+        self.criar_tela_bombas()
 
-    def tela_listar_bombas(self):
+    def mostra_mensagem(mensagem, tipo='erro'):
+        if tipo == 'erro':
+            messagebox.showerror("Erro", mensagem, icon='error')
+        elif tipo == 'info':
+            messagebox.showinfo("Informação", mensagem, icon='info')
+
+    def criar_tela_bombas(self):
         self.clear_frame()
 
         top_frame = ctk.CTkFrame(self)
@@ -47,10 +49,10 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         try:
             bombas = self.controladorBombaCombustivel.listar_bombas()
             if not bombas:
-                Mostra_mensagem("Nenhuma bomba cadastrada.", tipo='info')
+                self.mostra_mensagem("Nenhuma bomba cadastrada.", tipo='info')
                 return
         except Exception as e:
-            Mostra_mensagem(f"Erro ao listar as bombas: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao listar as bombas: {e}", tipo='erro')
             return
 
         self.criar_tabela(bombas, self.cabecalhos)
@@ -191,24 +193,22 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         tanque_nome = self.tanque_var.get()
         identificadorTanque = nomes_tanques[tanque_nome]  # Obter o ID do tanque a partir do nome
         identificadorBomba = self.selected_row[5]
-        print
-
-        print(nomeBomba, autoAbastecimento, tipoCombustivel, bombaAtiva, identificadorTanque, identificadorBomba)
-
+        
+        
         if not nomeBomba or not autoAbastecimento or not tipoCombustivel or not bombaAtiva or not identificadorTanque:
-            Mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
+            self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
 
         try:
             resultado = self.controladorBombaCombustivel.atualizar_bomba(autoAbastecimento, tipoCombustivel, bombaAtiva, identificadorTanque, nomeBomba, identificadorBomba)
             if resultado:
-                Mostra_mensagem("Bomba atualizada com sucesso!", tipo='info')
+                self.mostra_mensagem("Bomba atualizada com sucesso!", tipo='info')
                 self.modal.destroy()
                 self.pesquisar()
             else:
-                Mostra_mensagem("Erro ao atualizar a bomba.", tipo='erro')
+                self.mostra_mensagem("Erro ao atualizar a bomba.", tipo='erro')
         except Exception as e:
-            Mostra_mensagem(f"Erro ao atualizar a bomba: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao atualizar a bomba: {e}", tipo='erro')
 
     def update_combustivel_entry(self, event):
         # Atualiza o campo de tipo de combustível quando uma bomba é selecionada
@@ -222,12 +222,12 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             try:
                 resultado = self.controladorBombaCombustivel.remover_bomba(identificadorBomba)
                 if resultado:
-                    Mostra_mensagem("Bomba excluída com sucesso!", tipo='info')
+                    self.mostra_mensagem("Bomba excluída com sucesso!", tipo='info')
                     self.pesquisar()
                 else:
-                    Mostra_mensagem("Erro ao excluir a bomba.", tipo='erro')
+                    self.mostra_mensagem("Erro ao excluir a bomba.", tipo='erro')
             except Exception as e:
-                Mostra_mensagem(f"Erro ao excluir a bomba: {e}", tipo='erro')
+                self.mostra_mensagem(f"Erro ao excluir a bomba: {e}", tipo='erro')
                 return
             self.btn_alterar.configure(state=tk.DISABLED)
             self.btn_excluir.configure(state=tk.DISABLED)
@@ -236,7 +236,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         try:
             bombas = self.controladorBombaCombustivel.listar_bombas()
         except Exception as e:
-            Mostra_mensagem(f"Erro ao pesquisar as bombas: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao pesquisar as bombas: {e}", tipo='erro')
             return
 
         for item in self.tree.get_children():
@@ -335,16 +335,16 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
         print(nomeBomba, autoAbastecimento, tipoCombustivel, bombaAtiva, tanque_id)
         if not nomeBomba or not autoAbastecimento or not tipoCombustivel or not bombaAtiva or not tanque_id:
-            Mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
+            self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
 
         try:
             resultado = self.controladorBombaCombustivel.adicionar_bomba(autoAbastecimento, tipoCombustivel, bombaAtiva, tanque_id, nomeBomba)
-            Mostra_mensagem("Nova bomba cadastrada com sucesso!", tipo='info')
+            self.mostra_mensagem("Nova bomba cadastrada com sucesso!", tipo='info')
             self.modal.destroy()
             self.pesquisar()
         except Exception as e:
-            Mostra_mensagem(f"Erro ao cadastrar a nova bomba: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao cadastrar a nova bomba: {e}", tipo='erro')
 
 
 if __name__ == '__main__':

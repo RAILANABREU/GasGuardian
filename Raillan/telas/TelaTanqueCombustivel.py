@@ -6,12 +6,6 @@ from tkinter import ttk
 from tkinter import messagebox
 
 
-def Mostra_mensagem(mensagem, tipo='erro'):
-    if tipo == 'erro':
-        messagebox.showerror("Erro", mensagem, icon='error')
-    elif tipo == 'info':
-        messagebox.showinfo("Informação", mensagem, icon='info')
-
 class TelaTanqueCombustivel(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -20,6 +14,12 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
         self.selected_row = None
         self.cabecalhos = ["Nome", "Porcentagem Alerta", "Capacidade", "Combustível", "Volume Atual", "Status"]
         self.criar_tela_tanque_Combustivel()
+
+    def mostra_mensagem(self, mensagem, tipo='erro'):
+        if tipo == 'erro':
+            messagebox.showerror("Erro", mensagem)
+        elif tipo == 'info':
+            messagebox.showinfo("Informação", mensagem)
 
     def criar_tela_tanque_Combustivel(self):
         self.clear_frame()
@@ -45,10 +45,10 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
         try:
             tanques = self.controladorTanqueCombustivel.listar_tanques()
             if not tanques:
-                Mostra_mensagem("Nenhum tanque cadastrado.", tipo='info')
+                self.mostra_mensagem("Nenhum tanque cadastrado.", tipo='info')
                 return
         except Exception as e:
-            Mostra_mensagem(f"Erro ao listar os tanques: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao listar os tanques: {e}", tipo='erro')
             return
         # Criando a tabela responsiva com barra de rolagem horizontal
         self.criar_tabela(tanques, self.cabecalhos)
@@ -134,11 +134,8 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
         self.modal.grab_set()
         self.modal.update_idletasks()
 
-        width = self.modal.winfo_width()
-        height = self.modal.winfo_height()
-        x = (self.modal.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.modal.winfo_screenheight() // 2) - (height // 2)
-        self.modal.geometry(f'{width}x{height}+{x}+{y}')
+        # Centralizar o modal na tela principal
+        self.centralize_modal(self.modal, 500, 400)
 
         title_label = ctk.CTkLabel(self.modal, text="Alterar Tanque", font=("Arial", 25, "bold"))
         title_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky='w')
@@ -186,35 +183,35 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
             porcentagem_alerta = float(porcentagem_alerta)
             volume_atual = float(volume_atual)
         except ValueError as e:
-            Mostra_mensagem("Erro ao converter os valores para números.", tipo='erro')
+            self.mostra_mensagem("Erro ao converter os valores para números.", tipo='erro')
             return
         # Verificar se capacidade é maior que zero
         if capacidade <= 0:
-            Mostra_mensagem("A capacidade deve ser maior que zero.", tipo='erro')
+            self.mostra_mensagem("A capacidade deve ser maior que zero.", tipo='erro')
             return
 
         # Verificar se porcentagem_alerta é maior que 0 e menor que 100
         if porcentagem_alerta <= 0 or porcentagem_alerta >= 100:
-            Mostra_mensagem("A porcentagem de alerta deve ser maior que 0 e menor que 100.", tipo='erro')
+            self.mostra_mensagem("A porcentagem de alerta deve ser maior que 0 e menor que 100.", tipo='erro')
             return
         
         try:
             resultado = self.controladorTanqueCombustivel.atualizar_tanque(nome, capacidade, porcentagem_alerta, combustivel, volume_atual, identificadorTanque)
-            Mostra_mensagem("Tanque atualizado com sucesso!", tipo='info')
+            self.mostra_mensagem("Tanque atualizado com sucesso!", tipo='info')
             self.modal.destroy()
             self.pesquisar()  # Atualizar a grid com os novos dados
         except Exception as e:
-            Mostra_mensagem(f"Erro ao atualizar o tanque: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao atualizar o tanque: {e}", tipo='erro')
 
     def tela_excluir_tanque(self):
         if self.selected_row:
             identificadorTanque = self.selected_row[6]  # Ajustar o índice conforme necessário
             try:
                 resultado = self.controladorTanqueCombustivel.remover_tanque(identificadorTanque)
-                Mostra_mensagem("Tanque excluído com sucesso!", tipo='info')
+                self.mostra_mensagem("Tanque excluído com sucesso!", tipo='info')
                 self.pesquisar()  # Atualizar a grid com os novos dados
             except Exception as e:
-                Mostra_mensagem(f"Erro ao excluir o tanque: {e}", tipo='erro')
+                self.mostra_mensagem(f"Erro ao excluir o tanque: {e}", tipo='erro')
                 return
             self.btn_alterar.configure(state=tk.DISABLED)
             self.btn_excluir.configure(state=tk.DISABLED)
@@ -224,7 +221,7 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
         try:
             tanques = self.controladorTanqueCombustivel.listar_tanques()
         except Exception as e:
-            Mostra_mensagem(f"Erro ao pesquisar os tanques: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao pesquisar os tanques: {e}", tipo='erro')
             return
         # Limpar a tabela atual
         for item in self.tree.get_children():
@@ -246,16 +243,13 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
         self.modal.title("Cadastrar Novo Tanque")
 
         # Centralizar o modal na tela principal
+        self.centralize_modal(self.modal, 500, 400)
         self.modal.geometry("500x400")
         self.modal.transient(self)
         self.modal.grab_set()
         self.modal.update_idletasks()
 
-        width = self.modal.winfo_width()
-        height = self.modal.winfo_height()
-        x = (self.modal.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.modal.winfo_screenheight() // 2) - (height // 2)
-        self.modal.geometry(f'{width}x{height}+{x}+{y}')
+
 
         # Título alinhado à esquerda
         title_label = ctk.CTkLabel(self.modal, text="Cadastrar Novo Tanque", font=("Arial", 25, "bold"))
@@ -300,7 +294,7 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
         volume_atual = self.entries["Volume Atual"].get().replace(' L', '')  # Remover ' L' e obter o número
 
         if not nome or not capacidade or not porcentagem_alerta or not combustivel or not volume_atual:
-            Mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
+            self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
         # Converter os valores para os tipos apropriados antes de enviar para o banco
         try:
@@ -308,25 +302,29 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
             porcentagem_alerta = float(porcentagem_alerta)
             volume_atual = float(volume_atual)
         except ValueError:
-            Mostra_mensagem("Erro ao converter os valores para números.", tipo='erro')
+            self.mostra_mensagem("Erro ao converter os valores para números.", tipo='erro')
             return
  
          # Verificar se porcentagem_alerta é maior que 0 e menor que 100
         if porcentagem_alerta <= 0 or porcentagem_alerta >= 100:
-            Mostra_mensagem("A porcentagem de alerta deve ser maior que 0 e menor que 100.", tipo='erro')
+            self.mostra_mensagem("A porcentagem de alerta deve ser maior que 0 e menor que 100.", tipo='erro')
             return
         # Verificar se capacidade é maior que zero
         if capacidade <= 0:
-            Mostra_mensagem("A capacidade deve ser maior que zero.", tipo='erro')
+            self.mostra_mensagem("A capacidade deve ser maior que zero.", tipo='erro')
             return
 
         try:
             resultado = self.controladorTanqueCombustivel.adicionar_tanque(nome, capacidade, porcentagem_alerta, combustivel, volume_atual)
-            Mostra_mensagem("Novo tanque cadastrado com sucesso!", tipo='info')
+            self.mostra_mensagem("Novo tanque cadastrado com sucesso!", tipo='info')
             self.modal.destroy()
             self.pesquisar()  # Atualizar a grid com os novos dados
         except Exception as e:
-            Mostra_mensagem(f"Erro ao cadastrar o novo tanque: {e}", tipo='erro')
+            self.mostra_mensagem(f"Erro ao cadastrar o novo tanque: {e}", tipo='erro')
+
+    def centralize_modal(self, modal, width, height):
+        modal.geometry(f"{width}x{height}+{(modal.winfo_screenwidth()//2) - (width//2)}+{(modal.winfo_screenheight()//2) - (height//2)}")
+
 
 if __name__ == '__main__':
     root = tk.Tk()

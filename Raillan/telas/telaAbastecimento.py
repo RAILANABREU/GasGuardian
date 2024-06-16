@@ -15,8 +15,6 @@ class TelaAbastecimento(tk.Frame):
         self.controladorTipoCombustivel = ControladorTipoCombustivel()
         self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.controladorAbastecimento = ControladorAbastecimento()
-
-
         self.create_main_button()
 
     def mostra_mensagem(self, mensagem, tipo='erro'):

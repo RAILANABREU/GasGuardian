@@ -43,6 +43,10 @@ class ControladorUsuario:
             return self.cursor.rowcount > 0
         
     def adicionar_usuario(self, cpf, email, nome, telefone, senha, isGestor):
+
+        nome = nome.title()
+        email = email.lower()
+
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
         if self.validar_dados(cpf, email, nome, telefone, senha):
             try:
@@ -114,6 +118,10 @@ class ControladorUsuario:
         self.cursor.execute("SELECT * FROM usuarios WHERE email = ?", (email,))
         if self.cursor.fetchone():
             raise ValueError("Email já cadastrado.")
+
+        self.cursor.execute("SELECT * FROM usuarios WHERE cpf = ?", (cpf,))
+        if self.cursor.fetchone():
+            raise ValueError("CPF já cadastrado.")
 
         # Se não houver nenhum erro encontrado nos dados, retorne True
         return True

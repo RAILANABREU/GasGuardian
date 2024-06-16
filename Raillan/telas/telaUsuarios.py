@@ -110,11 +110,7 @@ class TelaUsuario(ctk.CTkFrame):
         self.modal.grab_set()
         self.modal.update_idletasks()
 
-        width = self.modal.winfo_width()
-        height = self.modal.winfo_height()
-        x = (self.modal.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.modal.winfo_screenheight() // 2) - (height // 2)
-        self.modal.geometry(f'{width}x{height}+{x}+{y}')
+        self.centralize_modal(self.modal, 500, 400)
 
         title_label = ctk.CTkLabel(self.modal, text="Alterar Usuário", font=("Arial", 25, "bold"))
         title_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky='w')
@@ -127,8 +123,8 @@ class TelaUsuario(ctk.CTkFrame):
             lbl.grid(row=i+1, column=0, padx=10, pady=5, sticky='e')
 
             if label == "É Gestor":
-                self.is_gestor_var = ctk.StringVar(value="off")
-                entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue="on", offvalue="off")
+                self.is_gestor_var = ctk.StringVar(value="0")
+                entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue="1", offvalue="0")
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)
                 entry.insert(0, dados_usuario[i])
@@ -218,11 +214,7 @@ class TelaUsuario(ctk.CTkFrame):
         self.modal.grab_set()
         self.modal.update_idletasks()
 
-        width = self.modal.winfo_width()
-        height = self.modal.winfo_height()
-        x = (self.modal.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.modal.winfo_screenheight() // 2) - (height // 2)
-        self.modal.geometry(f'{width}x{height}+{x}+{y}')
+        self.centralize_modal(self.modal, 500, 400)
 
         title_label = ctk.CTkLabel(self.modal, text="Cadastrar Novo Usuário", font=("Arial", 25, "bold"))
         title_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky='w')
@@ -235,7 +227,7 @@ class TelaUsuario(ctk.CTkFrame):
             lbl.grid(row=i+1, column=0, padx=10, pady=5, sticky='e')
 
             if label == "É Gestor":
-                self.is_gestor_var = ctk.StringVar(value="off")
+                self.is_gestor_var = ctk.StringVar(value="0")
                 entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue=1, offvalue=0)
             else:
                 entry = ctk.CTkEntry(self.modal, width=120, placeholder_text=f"{label.lower()}")
@@ -314,11 +306,7 @@ class TelaUsuario(ctk.CTkFrame):
         entry.delete(0, tk.END)
         entry.insert(0, formatted_telefone)
 
+    def centralize_modal(self, modal, width, height):
+        modal.geometry(f"{width}x{height}+{(modal.winfo_screenwidth()//2) - (width//2)}+{(modal.winfo_screenheight()//2) - (height//2)}")
 
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.geometry("1200x800")
-    app = TelaUsuario(root)
-    app.pack(fill="both", expand=True)
-    root.mainloop()

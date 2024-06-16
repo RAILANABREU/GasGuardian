@@ -15,6 +15,7 @@ class TelaLogin:
         self.modal.geometry("400x500")
         self.modal.resizable(False, False)
         self.modal._apply_appearance_mode("light")
+        self.centralize_modal(self.modal, 400, 500)
 
         # Melhorar o fundo do modal
         self.modal.configure(bg="#D4D4D4")
@@ -68,3 +69,6 @@ class TelaLogin:
             messagebox.showerror("Erro", mensagem)
         elif tipo == 'info':
             messagebox.showinfo("Informação", mensagem)
+
+    def centralize_modal(self, modal, width, height):
+        modal.geometry(f"{width}x{height}+{(modal.winfo_screenwidth()//2) - (width//2)}+{(modal.winfo_screenheight()//2) - (height//2)}")

@@ -93,6 +93,7 @@ class MenuPrincipal(ctk.CTk):
         self.frames["funcionarios"] = TelaUsuario(self)
         self.frames["combustiveis"] = TelaTipoCombustivel(self)
 
+
         for frame in self.frames.values():
             frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
             frame.grid_remove()  # Ocultar todos os frames inicialmente
