@@ -14,9 +14,10 @@ from .TelaRelatorios import TelaRelatorios  # Importação da classe TelaRelator
 from .TelaRenovacaoEstoque import TelaRenovacaoEstoque  # Importação da classe TelaRenovacaoEstoque
 
 class MenuPrincipal(ctk.CTk):
-    def __init__(self, is_gestor):
+    def __init__(self, is_gestor, controlador_sistema):
         super().__init__()
         self.is_gestor = is_gestor
+        self.controlador_sistema = controlador_sistema
 
         self.title("Sistema de Gerenciamento")
         self.geometry("1200x800")
@@ -31,15 +32,12 @@ class MenuPrincipal(ctk.CTk):
         # Inicializando os frames
         self.frames = {}
         self.current_frame = None
+
+        # Criar os frames após a configuração do menu
         self.create_frames()
 
         # Atualizar as cores do texto de acordo com o tema
-        self.update_text_colors()
-
-        # Bind para mudança de tema
         ctk.set_appearance_mode("light")
-        self.update_text_colors()
-
 
     def configure_grid(self):
         self.grid_columnconfigure(0, weight=0, minsize=300)  # Largura fixa do menu
@@ -79,6 +77,10 @@ class MenuPrincipal(ctk.CTk):
         else:
             self.add_menu_item("", "abastecimento", "Abastecimento", icon_path_base + "fuel-pump.png", True)
 
+        # Botão de logout
+        self.logout_button = ctk.CTkButton(self.menu_frame, text="Logout", command=self.logout)
+        self.logout_button.pack(side="bottom", pady=20)
+
         # Configuração das tags
         self.tree_menu.tag_configure("main", font=("Arial", 30, "bold"))
         self.tree_menu.tag_configure("sub", font=("Arial", 25, "bold"))
@@ -87,7 +89,6 @@ class MenuPrincipal(ctk.CTk):
 
     def create_frames(self):
         # Adicionar os frames que você deseja exibir ao clicar nos submenus
-
         self.frames["tanques"] = TelaTanqueCombustivel(self)
         self.frames["bombas"] = TelaBombaCombustivel(self)
         self.frames["posto"] = TelaPosto(self)
@@ -96,11 +97,6 @@ class MenuPrincipal(ctk.CTk):
         self.frames["combustiveis"] = TelaTipoCombustivel(self)
         self.frames["relatorios"] = TelaRelatorios(self)
         self.frames["Renovacao"] = TelaRenovacaoEstoque(self)
-
-
-        for frame in self.frames.values():
-            frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
-            frame.grid_remove()  # Ocultar todos os frames inicialmente
 
     def add_menu_item(self, parent, id, text, icon_path, is_main=False):
         icon = self.get_icon(icon_path)
@@ -121,41 +117,35 @@ class MenuPrincipal(ctk.CTk):
 
     def on_menu_select(self, event):
         selected_item = self.tree_menu.selection()[0]
-        self.show_frame(selected_item)
+        if selected_item in self.frames:
+            self.show_frame(selected_item)
 
     def show_frame(self, frame_name):
         # Ocultar todos os frames
+        for frame in self.frames.values():
+            frame.grid_remove()
+
+        # Remover o frame antigo do grid e destruir
         if self.current_frame:
             self.current_frame.grid_remove()
+            self.current_frame.destroy()
+            self.current_frame = None
 
-        # Mostrar o frame selecionado
+        # Criar e mostrar o frame selecionado
         frame = self.frames.get(frame_name)
         if frame:
-            frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
-            self.current_frame = frame
+            new_frame = frame.__class__(self)  # Criar uma nova instância do frame
+            new_frame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+            self.current_frame = new_frame
+            if hasattr(new_frame, 'criar_tela'):
+                new_frame.criar_tela()  # Chamar o método criar_tela se ele existir
 
-    def update_text_colors(self):
-        theme = ctk.get_appearance_mode()
-        if theme == "Dark":
-            text_color = "white"
-        else:
-            text_color = "black"
-
-        # Atualizar as cores das tags
-        self.tree_menu.tag_configure("main", foreground=text_color)
-        self.tree_menu.tag_configure("sub", foreground=text_color)
-
-        # Atualizar a cor do label do menu
-        self.menu_label.configure(text_color=text_color)
-
-        # Atualizar a cor do texto no Treeview
-        self.tree_menu.tag_configure("main", foreground=text_color)
-        self.tree_menu.tag_configure("sub", foreground=text_color)
-
-    def on_theme_change(self, event=None):
-        self.update_text_colors()
+    def logout(self):
+        self.destroy()
+        self.controlador_sistema.iniciar()  # Reinicia o sistema e mostra a tela de login
 
 if __name__ == '__main__':
     ctk.set_appearance_mode("light")  # Usar o modo do sistema
-    app = MenuPrincipal(is_gestor=True)  # Alterar conforme necessário para testes
+    controlador_sistema = None  # Alterar conforme necessário para testes
+    app = MenuPrincipal(is_gestor=True, controlador_sistema=controlador_sistema)  # Alterar conforme necessário para testes
     app.mainloop()

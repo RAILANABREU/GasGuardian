@@ -7,9 +7,6 @@ from tkinter import ttk
 from tkinter import messagebox
 
 
-
-
-
 class TelaBombaCombustivel(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)

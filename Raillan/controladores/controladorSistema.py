@@ -6,10 +6,9 @@ from controladores.controladorTipoCombustivel import ControladorTipoCombustivel
 from telas.telaSitemaPrincipal import MenuPrincipal
 from telas.TelaLogin import TelaLogin
 
-
 class ControladorSistema:
     def __init__(self) -> None:
-        self.__TelaPrincipal = MenuPrincipal
+        self.__TelaPrincipal = None
         self.__controladorPosto = ControladorPosto()
         self.__controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.__controladorAbastecimento = ControladorAbastecimento()
@@ -36,6 +35,7 @@ class ControladorSistema:
     @property
     def controladorTipoCombustivel(self):
         return self.__controladorTipoCombustivel
+
     @property
     def TelaPrincipal(self):
         return self.__TelaPrincipal
@@ -43,13 +43,12 @@ class ControladorSistema:
     @property
     def telaLogin(self):
         return self.__TelaLogin
-    
 
     def iniciar(self):
         login = self.__TelaLogin.modal_login()
         if login[0]:
             is_gestor = login[1]
-            self.__TelaPrincipal = MenuPrincipal(is_gestor)
+            self.__TelaPrincipal = MenuPrincipal(is_gestor, self)
             self.__TelaPrincipal.mainloop()
         else:
             self.iniciar()
