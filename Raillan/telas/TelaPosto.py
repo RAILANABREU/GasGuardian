@@ -49,7 +49,7 @@ class TelaPosto(ctk.CTkFrame):
                 return
         except Exception as e:
             self.mostra_mensagem(f"Erro ao listar postos: {e}", 'erro')
-    
+
         self.criar_tabela(posto, self.cabecalhos)
     
          # Adicionando botão de pesquisa na parte inferior direita
