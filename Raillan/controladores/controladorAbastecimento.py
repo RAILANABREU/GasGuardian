@@ -60,7 +60,21 @@ class ControladorAbastecimento:
         return True
 
     def listar_abastecimentos(self):
-        self.cursor.execute("SELECT * FROM Abastecimentos")
+        self.cursor.execute("""
+            SELECT 
+                a.id AS ID, 
+                strftime('%Y-%m-%d', a.data) AS Data, 
+                strftime('%H:%M:%S', a.data) AS Hora, 
+                b.nomeBomba AS Bomba, 
+                a.tipocombustivel AS Combustível, 
+                a.litros AS Litros, 
+                a.preco AS Valor 
+            FROM 
+                Abastecimentos a
+            JOIN 
+                Bombas b ON a.idBomba = b.id
+        """)
+        
         return self.cursor.fetchall()
 
         

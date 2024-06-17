@@ -93,7 +93,7 @@ class ControladorBombaCombustivel:
     def remover_bomba(self, identificadorBomba):
         try:
             with self.conn:
-                self.cursor.execute("DELETE FROM Bombas WHERE id = ?", (identificadorBomba,))
+                self.cursor.execute("UPDATE Bombas SET bombaAtiva = 0 WHERE id = ?", (identificadorBomba,))
                 return self.cursor.rowcount > 0
         except sqlite3.Error as e:
             return e
