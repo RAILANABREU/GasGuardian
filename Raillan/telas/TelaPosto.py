@@ -40,8 +40,6 @@ class TelaPosto(ctk.CTkFrame):
         self.btn_alterar = ctk.CTkButton(btn_frame, text="Alterar", command=self.tela_alterar_posto, state=tk.DISABLED)
         self.btn_alterar.pack(side="left", padx=1)
 
-        self.btn_excluir = ctk.CTkButton(btn_frame, text="Excluir", command=self.tela_excluir_posto, state=tk.DISABLED)
-        self.btn_excluir.pack(side="left", padx=1)
         try:
             posto = self.controlador.listar_posto()
             if not posto:
@@ -51,10 +49,6 @@ class TelaPosto(ctk.CTkFrame):
             self.mostra_mensagem(f"Erro ao listar postos: {e}", 'erro')
 
         self.criar_tabela(posto, self.cabecalhos)
-    
-         # Adicionando botão de pesquisa na parte inferior direita
-        btn_pesquisar = ctk.CTkButton(self, text="Pesquisar", command=self.pesquisar)
-        btn_pesquisar.pack(side="bottom", anchor="se", padx=10, pady=10)
 
    
     def criar_tabela(self, dados, cabecalhos):
@@ -187,28 +181,6 @@ class TelaPosto(ctk.CTkFrame):
             self.pesquisar()
         except Exception as e:
             self.mostra_mensagem(f"Erro ao atualizar posto: {e}", 'erro')
-
-    def tela_excluir_posto(self):
-        if not self.selected_row:
-            self.mostra_mensagem("Selecione um posto na lista para excluir!", 'info')
-            return
-
-        self.modal = tk.Toplevel(self)
-        self.modal.title("Excluir Posto")
-        self.centralize_modal(self.modal, 300, 200)
-
-        ctk.CTkLabel(self.modal, text=f"Tem certeza que deseja excluir o posto {self.selected_row[1]}?", font=("Arial", 16)).pack(pady=20)
-        ctk.CTkButton(self.modal, text="Excluir", command=self.excluir_posto).pack(side="left", padx=10, pady=20)
-        ctk.CTkButton(self.modal, text="Cancelar", command=self.modal.destroy).pack(side="right", padx=10, pady=20)
-
-    def excluir_posto(self):
-        try:
-            self.controlador.remover_posto(self.selected_row[0])  # Assuming CNPJ is the first element
-            self.mostra_mensagem("Posto excluído com sucesso!", 'info')
-            self.modal.destroy()
-            self.pesquisar()
-        except Exception as e:
-            self.mostra_mensagem(f"Erro ao excluir posto: {e}", 'erro')
 
     def pesquisar(self):
         # Lógica para pesquisar e carregar os dados na grid

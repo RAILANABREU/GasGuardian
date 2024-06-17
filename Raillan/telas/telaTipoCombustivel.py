@@ -31,13 +31,13 @@ class TelaTipoCombustivel(ctk.CTkFrame):
         btn_frame.pack(side="right")
 
         btn_add = ctk.CTkButton(btn_frame, text="+", command=self.modal_cadastrar_tipo_combustivel)
-        btn_add.pack(side="left", padx=5)
+        btn_add.pack(side="left", padx=5, pady=10)
 
         self.btn_alterar = ctk.CTkButton(btn_frame, text="Alterar", command=self.tela_alterar_tipo_combustivel, state=tk.DISABLED)
-        self.btn_alterar.pack(side="left", padx=5)
+        self.btn_alterar.pack(side="left", padx=5, pady=10)
 
         self.btn_excluir = ctk.CTkButton(btn_frame, text="Excluir", command=self.tela_excluir_tipo_combustivel, state=tk.DISABLED)
-        self.btn_excluir.pack(side="left", padx=5)
+        self.btn_excluir.pack(side="left", padx=5, pady=10)
 
         try:
             tipo_combustivel = self.controlador.listar_tipo_combustivel()
@@ -49,8 +49,6 @@ class TelaTipoCombustivel(ctk.CTkFrame):
 
         self.criar_tabela(tipo_combustivel, self.cabecalhos)
 
-        btn_pesquisar = ctk.CTkButton(self, text="Pesquisar", command=self.pesquisar)
-        btn_pesquisar.pack(side="bottom", anchor="se", padx=10, pady=10)
 
     def criar_tabela(self, dados, cabecalhos):
         container = ctk.CTkFrame(self)

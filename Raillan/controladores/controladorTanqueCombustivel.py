@@ -66,6 +66,42 @@ class ControladorTanqueCombustivel:
         self.cursor.execute("SELECT volumeAtual FROM Tanques WHERE id = ?", (identificadorTanque,))
         return self.cursor.fetchone()
 
+    def renovar_estoque(self, identificadorTanque, abastecimento):
+        try:
+            # Obter o volume atual e a capacidade máxima do tanque
+            self.cursor.execute("SELECT volumeAtual, capacidadeMaxima FROM Tanques WHERE id = ?", (identificadorTanque,))
+            resultado = self.cursor.fetchone()
+            
+            if resultado:
+                volume_atual, capacidade_maxima = resultado
+                novo_volume = volume_atual + abastecimento
+                
+                # Verificar se o novo volume excede a capacidade máxima do tanque
+                if novo_volume > capacidade_maxima:
+                    raise ValueError("Operação não realizada: o volume de abastecimento excede a capacidade máxima do tanque.")
+                
+                # Atualizar o volume do tanque
+                with self.conn:
+                    self.cursor.execute("UPDATE Tanques SET volumeAtual = ? WHERE id = ?", (novo_volume, identificadorTanque))
+                    self.conn.commit()
+                    
+                    if self.cursor.rowcount > 0:
+                        print("Tanque atualizado com sucesso!")
+                        return True
+                    else:
+                        print("Nenhum tanque encontrado com o identificador fornecido.")
+                        return False
+            else:
+                print("Nenhum tanque encontrado com o identificador fornecido.")
+                return False
+        except Exception as e:
+            print(f"Erro: {e}")
+            return False
+
+                
+
+
+
     def atualizar_volume_tanque(self, identificador_tanque, litros):
         try:
             # Obter o volume atual do tanque

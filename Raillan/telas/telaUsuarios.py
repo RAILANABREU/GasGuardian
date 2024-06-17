@@ -33,13 +33,13 @@ class TelaUsuario(ctk.CTkFrame):
         btn_frame.pack(side="right")
 
         btn_add = ctk.CTkButton(btn_frame, text="+", command=self.tela_cadastrar_usuario)
-        btn_add.pack(side="left", padx=5)
+        btn_add.pack(side="left", padx=5, pady=10)
 
         self.btn_alterar = ctk.CTkButton(btn_frame, text="Alterar", command=self.tela_alterar_usuario, state=tk.DISABLED)
-        self.btn_alterar.pack(side="left", padx=5)
+        self.btn_alterar.pack(side="left", padx=5, pady=10)
 
         self.btn_excluir = ctk.CTkButton(btn_frame, text="Excluir", command=self.tela_excluir_usuario, state=tk.DISABLED)
-        self.btn_excluir.pack(side="left", padx=5)
+        self.btn_excluir.pack(side="left", padx=5, pady=10)
 
         try:
             usuarios = self.controladorUsuario.listar_usuarios()
@@ -51,8 +51,7 @@ class TelaUsuario(ctk.CTkFrame):
             return
 
         self.criar_tabela(usuarios, self.cabecalhos)
-        btn_pesquisar = ctk.CTkButton(self, text="Pesquisar", command=self.pesquisar)
-        btn_pesquisar.pack(side="bottom", anchor="se", padx=10, pady=10)
+ 
 
     def criar_tabela(self, dados, cabecalhos):
         container = ctk.CTkFrame(self)

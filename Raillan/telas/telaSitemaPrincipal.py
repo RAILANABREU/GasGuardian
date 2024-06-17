@@ -11,6 +11,7 @@ from .telaAbastecimento import TelaAbastecimento  # Importação da classe TelaA
 from .telaUsuarios import TelaUsuario  # Importação da classe TelaUsuario
 from .telaTipoCombustivel import TelaTipoCombustivel  # Importação da classe TelaTipoCombustivel
 from .TelaRelatorios import TelaRelatorios  # Importação da classe TelaRelatorios
+from .TelaRenovacaoEstoque import TelaRenovacaoEstoque  # Importação da classe TelaRenovacaoEstoque
 
 class MenuPrincipal(ctk.CTk):
     def __init__(self, is_gestor):
@@ -94,6 +95,7 @@ class MenuPrincipal(ctk.CTk):
         self.frames["funcionarios"] = TelaUsuario(self)
         self.frames["combustiveis"] = TelaTipoCombustivel(self)
         self.frames["relatorios"] = TelaRelatorios(self)
+        self.frames["Renovacao"] = TelaRenovacaoEstoque(self)
 
 
         for frame in self.frames.values():
