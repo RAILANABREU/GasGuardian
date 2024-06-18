@@ -96,7 +96,8 @@ class ControladorBombaCombustivel:
                 self.cursor.execute("UPDATE Bombas SET bombaAtiva = 0 WHERE id = ?", (identificadorBomba,))
                 return self.cursor.rowcount > 0
         except sqlite3.Error as e:
-            return e
+            return False
+
 
     def atualizar_bomba(self, autoAbastecimento, tipoCombustivel, bombaAtiva, tanque, nomeBomba, identificadorBomba):
         try:

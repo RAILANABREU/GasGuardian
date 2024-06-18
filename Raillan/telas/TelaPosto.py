@@ -98,11 +98,9 @@ class TelaPosto(ctk.CTkFrame):
         if selected_item:
             self.selected_row = self.tree.item(selected_item[0], "values")
             self.btn_alterar.configure(state=tk.NORMAL)
-            self.btn_excluir.configure(state=tk.NORMAL)
         else:
             self.selected_row = None
             self.btn_alterar.configure(state=tk.DISABLED)
-            self.btn_excluir.configure(state=tk.DISABLED)
 
 
     def clear_frame(self):

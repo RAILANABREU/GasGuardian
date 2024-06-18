@@ -137,9 +137,10 @@ class ControladorTanqueCombustivel:
         try:
             with self.conn:
                 self.cursor.execute("DELETE FROM Tanques WHERE id = ?", (identificadorTanque,))
-                return self.cursor.rowcount > 0
+                return True
         except sqlite3.Error as e:
-            return e    
+            return False
+
     def atualizar_tanque(self,nome, capacidadeMaxima, porcentagemAlerta, tipoCombustivel, volumeAtual, identificadorTanque):
         tanque = TanqueCombustivel(nome, capacidadeMaxima, porcentagemAlerta, tipoCombustivel, volumeAtual)
 
