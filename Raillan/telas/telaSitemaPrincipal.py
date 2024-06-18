@@ -60,7 +60,7 @@ class MenuPrincipal(ctk.CTk):
         style = ttk.Style()
         style.configure("Treeview", rowheight=50)
 
-        icon_path_base = "/Users/railanabreu/Documents/Projects/GasGuardian/Raillan/telas/Icones/"
+        icon_path_base = "Raillan/telas/Icones/"
 
         if self.is_gestor == 1:
             # Adicionando itens ao menu

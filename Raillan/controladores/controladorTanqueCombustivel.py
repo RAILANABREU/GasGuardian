@@ -2,12 +2,9 @@ import sqlite3
 import os
 from entidades.tanqueCombustivel import TanqueCombustivel
 
-diretorio_atual = os.path.dirname(os.path.abspath(__file__))
-diretorio_pai = os.path.dirname(diretorio_atual)
-
 class ControladorTanqueCombustivel:
     def __init__(self):
-        self.conn = sqlite3.connect(diretorio_pai + '/dados/DADOS.sqlite')
+        self.conn = sqlite3.connect('Raillan/dados/DADOS.sqlite')
         self.cursor = self.conn.cursor()
         self.__tanque = TanqueCombustivel
         self.conn.commit()

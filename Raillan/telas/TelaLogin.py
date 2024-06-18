@@ -8,6 +8,7 @@ class TelaLogin:
         self.controlador_usuario = ControladorUsuario()
         self.login_sucesso = False
         self.is_gestor = False
+        
 
     def modal_login(self):
         self.modal = ctk.CTk()
