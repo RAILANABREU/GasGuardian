@@ -6,13 +6,9 @@ from entidades.bombaCombustivel import BombaCombustivel
 from controladores.controladorTanqueCombustivel import ControladorTanqueCombustivel
 
 
-diretorio_atual = os.path.dirname(os.path.abspath(__file__))
-diretorio_pai = os.path.dirname(diretorio_atual)
-
-
 class ControladorBombaCombustivel:
     def __init__(self):
-        self.conn = sqlite3.connect(diretorio_pai + '/dados/DADOS.sqlite')
+        self.conn = sqlite3.connect('Raillan/dados/DADOS.sqlite')
         self.cursor = self.conn.cursor()
         self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.conn.commit()
@@ -96,7 +92,8 @@ class ControladorBombaCombustivel:
                 self.cursor.execute("UPDATE Bombas SET bombaAtiva = 0 WHERE id = ?", (identificadorBomba,))
                 return self.cursor.rowcount > 0
         except sqlite3.Error as e:
-            return e
+            return False
+
 
     def atualizar_bomba(self, autoAbastecimento, tipoCombustivel, bombaAtiva, tanque, nomeBomba, identificadorBomba):
         try:

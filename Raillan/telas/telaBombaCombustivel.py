@@ -7,9 +7,6 @@ from tkinter import ttk
 from tkinter import messagebox
 
 
-
-
-
 class TelaBombaCombustivel(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -20,7 +17,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         self.cabecalhos = ["Nome", "Auto Abastecimento", "Tipo de Combustível", "Bomba Ativa", "Tanque Nome"]
         self.criar_tela_bombas()
 
-    def mostra_mensagem(mensagem, tipo='erro'):
+    def mostra_mensagem(self,mensagem, tipo='erro'):
         if tipo == 'erro':
             messagebox.showerror("Erro", mensagem, icon='error')
         elif tipo == 'info':
@@ -47,7 +44,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         self.btn_excluir.pack(side="left", padx=5, pady=10)
 
         try:
-            bombas = self.controladorBombaCombustivel.listar_bombas()
+            bombas = self.controladorBombaCombustivel.listar_bombas_ativas()
             if not bombas:
                 self.mostra_mensagem("Nenhuma bomba cadastrada.", tipo='info')
                 return
@@ -232,7 +229,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
     def pesquisar(self):
         try:
-            bombas = self.controladorBombaCombustivel.listar_bombas()
+            bombas = self.controladorBombaCombustivel.listar_bombas_ativas()
         except Exception as e:
             self.mostra_mensagem(f"Erro ao pesquisar as bombas: {e}", tipo='erro')
             return

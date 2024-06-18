@@ -22,7 +22,7 @@ class TelaRelatorios(ctk.CTkFrame):
         buttons_frame = ctk.CTkFrame(main_frame)
         buttons_frame.pack(fill="x", pady=10, padx=10)
         ctk.CTkButton(buttons_frame, text="Abastecimentos", command=self.pesquisar_abastecimento, 
-                      font=("Arial", 15, "bold")).pack(side="right", padx=10)
+                      font=("Arial", 15, "bold")).pack(side="right", padx=10,pady=10)
         # Add more buttons here as needed
 
         # Treeview container

@@ -7,10 +7,14 @@ from controladores.controladorTanqueCombustivel import ControladorTanqueCombusti
 class TelaRenovacaoEstoque(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.__controlador_tanque_combustivel = ControladorTanqueCombustivel()
+        self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.criar_tela_renovacao_estoque()
 
     def criar_tela_renovacao_estoque(self):
+        # Limpa a tela antes de recriar os elementos
+        for widget in self.winfo_children():
+            widget.destroy()
+
         # Frame para o título
         title_frame = ctk.CTkFrame(self)
         title_frame.pack(fill="x", pady=10)
@@ -20,7 +24,7 @@ class TelaRenovacaoEstoque(ctk.CTkFrame):
         top_frame.pack(fill="both", expand=True)
 
         # Obtendo os dados dos tanques
-        tanques = self.__controlador_tanque_combustivel.listar_tanques()
+        tanques = self.controladorTanqueCombustivel.listar_tanques()
 
         # Criando barra de progresso e botão para cada tanque
         for index, tanque in enumerate(tanques):
@@ -42,34 +46,74 @@ class TelaRenovacaoEstoque(ctk.CTkFrame):
             progress_bar.set(status / 100)  # Convertendo de porcentagem para decimal
             progress_bar.pack(side="right", fill="none", expand=False, padx=10)
 
+        # Frame para o botão de pesquisa
+        pesquisar_frame = ctk.CTkFrame(self)
+        pesquisar_frame.pack(fill="x", pady=10)
+
+        # Botão para atualizar a lista de tanques
+        btn_atualizar = ctk.CTkButton(pesquisar_frame, text="Atualizar", command=self.criar_tela_renovacao_estoque)
+        btn_atualizar.pack(side="right", padx=10)
+
     def abrir_modal_abastecimento(self, tanque_id):
         modal = ctk.CTkToplevel(self)
         modal.title("Abastecimento de Tanque")
-        modal.geometry("300x200")
+        modal.geometry("500x400")
+
+        # Configuração do título
+        titulo_label = ctk.CTkLabel(modal, text="Abastecer Tanque", font=("Arial", 25))
+        titulo_label.pack(pady=20)
 
         # Buscar informações do tanque
-        tanque = self.__controlador_tanque_combustivel.buscar_tanque(tanque_id)
+        tanque = self.controladorTanqueCombustivel.buscar_tanque(tanque_id)
         if not tanque:
             self.mostra_mensagem("Tanque não encontrado!", tipo='erro')
+            modal.destroy()  # Fecha o modal se o tanque não for encontrado
             return
 
-        nome, tipo_combustivel, _, _, _, _, _ = tanque
+        # Widgets para exibir informações (campos desabilitados para edição)
+        tanque_id_label = ctk.CTkLabel(modal, text="ID do Tanque")
+        tanque_id_label.pack()
+        tanque_id_entry = ctk.CTkEntry(modal, state='disabled', width=200, height=30)
+        tanque_id_entry.pack(pady=5)
+        tanque_id_entry.insert(0, tanque[5])
 
-        # Widgets para exibir informações
-        info_label = ctk.CTkLabel(modal, text=f"Tanque: {nome}\nCombustível: {tipo_combustivel}")
-        info_label.pack(pady=10)
+        combustivel_label = ctk.CTkLabel(modal, text="Combustível")
+        combustivel_label.pack()
+        combustivel_entry = ctk.CTkEntry(modal, state='disabled', width=200, height=30)
+        combustivel_entry.pack(pady=5)
+        combustivel_entry.insert(0, tanque[3])
 
         # Campo de entrada para a quantidade de abastecimento
-        entrada_abastecimento = ctk.CTkEntry(modal)
+        entrada_abastecimento_label = ctk.CTkLabel(modal, text="Quantidade de Abastecimento")
+        entrada_abastecimento_label.pack()
+        entrada_abastecimento = ctk.CTkEntry(modal, placeholder_text="Digite a quantidade a abastecer", width=200, height=30)
         entrada_abastecimento.pack(pady=10)
+        
+        # Validação para aceitar apenas números
+        def validar_entrada(texto):
+            return texto.isdigit() or texto == ""
+        
+        vcmd = (self.register(validar_entrada), '%P')
+        entrada_abastecimento.configure(validate="key", validatecommand=vcmd)
 
         # Botão para confirmar o abastecimento
         confirm_button = ctk.CTkButton(modal, text="Confirmar",
-                                       command=lambda: self.renovar_estoque(tanque_id, float(entrada_abastecimento.get())))
-        confirm_button.pack(pady=10)
+                                    command=lambda: self.confirmar_abastecimento(modal, tanque_id, entrada_abastecimento.get()))
+        confirm_button.pack(pady=20)
+
+    def confirmar_abastecimento(self, modal, tanque_id, quantidade):
+        try:
+            quantidade = float(quantidade)
+            self.controladorTanqueCombustivel.renovar_estoque(tanque_id, quantidade)
+            self.mostra_mensagem("Abastecimento realizado com sucesso!", tipo='info')
+            modal.destroy()  # Fecha o modal após confirmar o abastecimento
+            self.criar_tela_renovacao_estoque()  # Atualiza a tela principal
+        except ValueError:
+            self.mostra_mensagem("Quantidade inválida!", tipo='erro')
 
     def mostra_mensagem(self, mensagem, tipo='erro'):
         if tipo == 'erro':
-            messagebox.showerror("Erro", mensagem)
+            messagebox.showerror("Erro", mensagem, icon='error')
         elif tipo == 'info':
-            messagebox.showinfo("Informação", mensagem)
+            messagebox.showinfo("Informação", mensagem, icon='info')
+
