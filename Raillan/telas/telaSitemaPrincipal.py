@@ -20,7 +20,7 @@ class MenuPrincipal(ctk.CTk):
         self.controlador_sistema = controlador_sistema
 
         self.title("Sistema de Gerenciamento")
-        self.geometry("1200x800")
+        self.geometry("1800x1000")
 
         # Inicializar a lista de imagens
         self.images = []

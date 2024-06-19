@@ -74,4 +74,78 @@ class ControladorAbastecimento:
         
         return self.cursor.fetchall()
 
+    def listar_abastecimentos_por_periodo(self, data_inicio, data_fim):
+        self.cursor.execute("""
+            SELECT 
+                a.id AS ID, 
+                strftime('%Y-%m-%d', a.data) AS Data, 
+                strftime('%H:%M:%S', a.data) AS Hora, 
+                b.nomeBomba AS Bomba, 
+                a.tipocombustivel AS Combustível, 
+                a.litros AS Litros, 
+                a.preco AS Valor 
+            FROM 
+                Abastecimentos a
+            JOIN 
+                Bombas b ON a.idBomba = b.id
+            WHERE
+                date(a.data) BETWEEN ? AND ?
+        """, (data_inicio, data_fim))
         
+        return self.cursor.fetchall()
+
+    def listar_abastecimentos_por_funcionario(self, cpf_funcionario):
+        self.cursor.execute("""
+            SELECT 
+                a.id AS ID, 
+                strftime('%Y-%m-%d', a.data) AS Data, 
+                strftime('%H:%M:%S', a.data) AS Hora, 
+                b.nomeBomba AS Bomba, 
+                a.tipocombustivel AS Combustível, 
+                a.litros AS Litros, 
+                a.preco AS Valor 
+            FROM 
+                Abastecimentos a
+            JOIN 
+                Bombas b ON a.idBomba = b.id
+            WHERE
+                a.cpfFuncionario = ?
+        """, (cpf_funcionario,))
+        
+        return self.cursor.fetchall()
+    
+    def listar_abastecimentos_por_funcionario_e_periodo(self, cpf_funcionario, data_inicio, data_fim):
+        self.cursor.execute("""
+            SELECT 
+                a.id AS ID, 
+                strftime('%Y-%m-%d', a.data) AS Data, 
+                strftime('%H:%M:%S', a.data) AS Hora, 
+                b.nomeBomba AS Bomba, 
+                a.tipocombustivel AS Combustível, 
+                a.litros AS Litros, 
+                a.preco AS Valor 
+            FROM 
+                Abastecimentos a
+            JOIN 
+                Bombas b ON a.idBomba = b.id
+            WHERE
+                a.cpfFuncionario = ? AND date(a.data) BETWEEN ? AND ?
+        """, (cpf_funcionario, data_inicio, data_fim))
+        
+        return self.cursor.fetchall()
+
+    def calcular_totais(self, data_inicio=None, data_fim=None):
+        query = """
+            SELECT SUM(preco) AS TotalVendas, SUM(litros) AS TotalLitros
+            FROM Abastecimentos
+        """
+        params = ()
+        if data_inicio and data_fim:
+            query += " WHERE date(data) BETWEEN ? AND ?"
+            params = (data_inicio, data_fim)
+        
+        self.cursor.execute(query, params)
+        result = self.cursor.fetchone()
+        total_vendas = result[0] if result[0] else 0.0
+        total_litros = result[1] if result[1] else 0.0
+        return total_vendas, total_litros
