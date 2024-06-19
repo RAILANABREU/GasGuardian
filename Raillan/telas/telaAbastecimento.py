@@ -129,7 +129,6 @@ class TelaAbastecimento(tk.Frame):
     def salvar_abastecimento(self):
         nomeBomba = self.entries["Bomba"].get()
         idBomba = dados_bomba[nomeBomba]
-        print(idBomba)
         tipoCombustivel = self.combustivel_var.get()
         data = datetime.now()
         data_formatada = data.strftime("%Y-%m-%d %H:%M:%S")
@@ -141,7 +140,6 @@ class TelaAbastecimento(tk.Frame):
             return
 
         try:
-            print(idBomba, tipoCombustivel, data_formatada, preco, litros)
             resultado = self.controladorAbastecimento.adicionar_abastecimento(idBomba, tipoCombustivel, data_formatada, preco, litros)
             self.mostra_mensagem("Abastecimento registrado com sucesso!", tipo='info')
             self.modal.destroy()

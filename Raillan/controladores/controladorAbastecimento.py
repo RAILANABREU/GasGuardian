@@ -16,13 +16,9 @@ class ControladorAbastecimento:
         self.conn.commit()
 
     def verificar_abastecimento(self, idBomba, tipoCombustivel, preco, litros):
-        # Verificar se a bomba está ativa
-        bomba = self.controlador_bomba.buscar_bomba(idBomba)
-        print(bomba)
-        if not bomba or not bomba[3]:
-            raise Exception("A bomba selecionada não está ativa.")
 
-
+        if preco <= 0:
+            raise Exception("O valor do abastecimento deve ser maior que zero.")
         # Verificar se o tanque tem capacidade para o abastecimento
         tanque = self.controlador_tanque_combustivel.buscar_tanque(bomba[5])
         if not tanque or tanque[4] < litros:
