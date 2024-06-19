@@ -26,6 +26,8 @@ class ControladorAbastecimento:
 
         return True
 
+    #Falta incluir o cpf do funcionário
+
     def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros):
         # Verificar dados do abastecimento
         self.verificar_abastecimento(idBomba, tipoCombustivel, float(preco), float(litros))
