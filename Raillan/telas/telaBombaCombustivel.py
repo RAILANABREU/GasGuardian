@@ -44,7 +44,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         self.btn_excluir.pack(side="left", padx=5, pady=10)
 
         try:
-            bombas = self.controladorBombaCombustivel.listar_bombas_ativas()
+            bombas = self.controladorBombaCombustivel.listar_bombas()
             if not bombas:
                 self.mostra_mensagem("Nenhuma bomba cadastrada.", tipo='info')
                 return
@@ -229,7 +229,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
     def pesquisar(self):
         try:
-            bombas = self.controladorBombaCombustivel.listar_bombas_ativas()
+            bombas = self.controladorBombaCombustivel.listar_bombas()
         except Exception as e:
             self.mostra_mensagem(f"Erro ao pesquisar as bombas: {e}", tipo='erro')
             return
@@ -328,7 +328,6 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         tanque_nome = self.entries["Tanque"].get()
         tanque_id = nomes_tanques[tanque_nome]
 
-        print(nomeBomba, autoAbastecimento, tipoCombustivel, bombaAtiva, tanque_id)
         if not nomeBomba or not autoAbastecimento or not tipoCombustivel or not bombaAtiva or not tanque_id:
             self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
