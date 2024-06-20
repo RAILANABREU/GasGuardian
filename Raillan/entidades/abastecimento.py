@@ -1,14 +1,13 @@
 from entidades.tipoCombustivel import TipoCombustivel
-from entidades.bombaCombustivel import BombaCombustivel
 
 class Abastecimento:
-    def __init__(self, idBomba: str, tipoCombustivel: str , data: str, preco: float, litros: float, cpf_funcionario: str) -> None:
+    def __init__(self, idBomba: str, tipoCombustivel: str , data: str, preco: float, litros: float, cpf_funcionario):
         self.__idBomba = idBomba
         self.__tipoCombustivel = tipoCombustivel
         self.__data = data
         self.__litros = litros
         self.__preco = preco
-        self.__cpf_funcionario   
+        self.__cpf_funcionario  
 
     @property
     def idBomba(self):

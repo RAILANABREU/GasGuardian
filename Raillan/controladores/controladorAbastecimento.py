@@ -19,7 +19,11 @@ class ControladorAbastecimento:
 
         if preco <= 0:
             raise Exception("O valor do abastecimento deve ser maior que zero.")
-        # Verificar se o tanque tem capacidade para o abastecimento
+        
+        bomba = self.controlador_bomba.buscar_bomba(idBomba)
+        if not bomba:
+            raise Exception("Bomba não encontrada.")
+        
         tanque = self.controlador_tanque_combustivel.buscar_tanque(bomba[5])
         if not tanque or tanque[4] < litros:
             raise Exception("O tanque não tem capacidade suficiente para o abastecimento solicitado.")
@@ -29,6 +33,7 @@ class ControladorAbastecimento:
     #Falta incluir o cpf do funcionário
 
     def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario):
+        print(idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario)
 
         # Verificar dados do abastecimento
         self.verificar_abastecimento(idBomba, tipoCombustivel, float(preco), float(litros))
@@ -52,7 +57,7 @@ class ControladorAbastecimento:
                 self.conn.commit()
                 return True
         except sqlite3.IntegrityError as e:
-            raise ValueError(f"Erro ao registrar Abastecimento: {e}")
+            raise ValueError(f"erro ao registrar Abastecimento: {e}")
         return True
 
     def listar_abastecimentos(self):

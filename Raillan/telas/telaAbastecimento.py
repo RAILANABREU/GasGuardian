@@ -5,6 +5,7 @@ from controladores.controladorTipoCombustivel import ControladorTipoCombustivel
 from controladores.controladorTanqueCombustivel import ControladorTanqueCombustivel
 from controladores.controladorBombaCombustivel import ControladorBombaCombustivel
 from controladores.controladorAbastecimento import ControladorAbastecimento
+from entidades.sessao import Sessao
 import customtkinter as ctk
 from datetime import datetime
 
@@ -15,7 +16,10 @@ class TelaAbastecimento(tk.Frame):
         self.controladorTipoCombustivel = ControladorTipoCombustivel()
         self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.controladorAbastecimento = ControladorAbastecimento()
+        self.cpf_funcionario = Sessao.get_usuario_logado()[2]
+
         self.create_main_button()
+        print(self.cpf_funcionario)
 
     def mostra_mensagem(self, mensagem, tipo='erro'):
         if tipo == 'erro':
@@ -98,8 +102,9 @@ class TelaAbastecimento(tk.Frame):
         bomba = self.bomba_var.get()
         if bomba:
             self.combustivel_var.set(combustivel_data[bomba])
-            self.calcula_litros(None)  # Recalcula os litros quando o tipo de combustível é atualizado
-
+            self.calcula_litros(None)
+        else:
+            self.mostra_mensagem("Selecione uma bomba válida!", tipo='erro')
     def calcula_litros(self, event):
         # Calcula os litros abastecidos com base no preço e no preço do combustível da bomba selecionada
         try:
@@ -140,10 +145,11 @@ class TelaAbastecimento(tk.Frame):
             return
 
         try:
-            resultado = self.controladorAbastecimento.adicionar_abastecimento(idBomba, tipoCombustivel, data_formatada, preco, litros)
+            resultado = self.controladorAbastecimento.adicionar_abastecimento(idBomba, tipoCombustivel, data_formatada, preco, litros, self.cpf_funcionario)
             self.mostra_mensagem("Abastecimento registrado com sucesso!", tipo='info')
             self.modal.destroy()
         except Exception as e:
+            print(Exception, e)
             self.mostra_mensagem(f"Erro ao registrar abastecimento: {e}", tipo='erro')
 
     def centralize_modal(self, window, width, height):
