@@ -64,12 +64,12 @@ class TelaAbastecimento(tk.Frame):
 
             if label == "Bomba":
                 self.bomba_var = tk.StringVar()
-                entry = ttk.Combobox(self.modal, textvariable=self.bomba_var, values=list(dados_bomba.keys()))
+                entry = ttk.Combobox(self.modal, textvariable=self.bomba_var, values=list(dados_bomba.keys()), state='readonly', )
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
                 entry.bind("<<ComboboxSelected>>", self.update_combustivel_entry)
             elif label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar()
-                entry = ctk.CTkEntry(self.modal, textvariable=self.combustivel_var, state='disabled')
+                entry = ctk.CTkEntry(self.modal, textvariable=self.combustivel_var, state='readonly')
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             elif label == "Preço":
                 self.preco_var = tk.StringVar()
@@ -103,8 +103,7 @@ class TelaAbastecimento(tk.Frame):
         if bomba:
             self.combustivel_var.set(combustivel_data[bomba])
             self.calcula_litros(None)
-        else:
-            self.mostra_mensagem("Selecione uma bomba válida!", tipo='erro')
+
     def calcula_litros(self, event):
         # Calcula os litros abastecidos com base no preço e no preço do combustível da bomba selecionada
         try:
@@ -129,10 +128,13 @@ class TelaAbastecimento(tk.Frame):
             self.entries["Litros abastecidos"].insert(0, "0.000")
             self.entries["Litros abastecidos"].configure(state='readonly')
 
-
-
     def salvar_abastecimento(self):
         nomeBomba = self.entries["Bomba"].get()
+
+        if not nomeBomba:
+            self.mostra_mensagem("Selecione uma bomba válida!", tipo='erro')
+            return
+
         idBomba = dados_bomba[nomeBomba]
         tipoCombustivel = self.combustivel_var.get()
         data = datetime.now()
@@ -151,27 +153,3 @@ class TelaAbastecimento(tk.Frame):
         except Exception as e:
             print(Exception, e)
             self.mostra_mensagem(f"Erro ao registrar abastecimento: {e}", tipo='erro')
-
-    def centralize_modal(self, window, width, height):
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
-        x = (screen_width // 2) - (width // 2)
-        y = (screen_height // 2) - (height // 2)
-        window.geometry(f"{width}x{height}+{x}+{y}")
-
-    def mostra_mensagem(self, mensagem, tipo='info'):
-        if tipo == 'info':
-            messagebox.showinfo("Informação", mensagem)
-        elif tipo == 'erro':
-            messagebox.showerror("Erro", mensagem)
-
-    def pesquisar(self):
-        pass  # implementar função de pesquisa
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.title("Sistema de Abastecimento")
-    root.geometry("1200x800")
-    app = TelaAbastecimento(root)
-    app.pack(fill="both", expand=True)
-    root.mainloop()

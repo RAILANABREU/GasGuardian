@@ -135,7 +135,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar(value=dados_bomba[2])
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='disabled', values=list(nomes_combustiveis.values()))
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='readonly', values=list(nomes_combustiveis.values()))
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar(value=dados_bomba[4])
@@ -280,7 +280,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar()
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='disabled', values=list(nomes_combustiveis.values()))
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='readonly', values=list(nomes_combustiveis.values()))
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar()
                 entry = ttk.Combobox(self.modal, textvariable=self.tanque_var, values=list(nomes_tanques.keys()))
