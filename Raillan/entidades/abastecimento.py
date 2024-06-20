@@ -7,7 +7,7 @@ class Abastecimento:
         self.__data = data
         self.__litros = litros
         self.__preco = preco
-        self.__cpf_funcionario  
+        self.__cpf_funcionario  = cpf_funcionario
 
     @property
     def idBomba(self):

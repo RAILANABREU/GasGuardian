@@ -98,7 +98,6 @@ class ControladorUsuario:
             Sessao.iniciar_sessao(usuario)
             print(usuario)
         return usuario
-    
 
 
     def validar_dados(self, cpf, email, nome, telefone, senha):
@@ -146,9 +145,15 @@ class ControladorUsuario:
         except sqlite3.Error as e:
             print(f"Erro ao atualizar o usuario: {e}")
             return False
-    
+
+    def buscar_nomes_usuarios(self):
+        self.cursor.execute("SELECT nome, cpf FROM usuarios")
+        return self.cursor.fetchall()
+
     def __del__(self):
         self.conn.close()
+
+
         
 
     

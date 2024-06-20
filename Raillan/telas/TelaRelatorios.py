@@ -3,11 +3,13 @@ import customtkinter as ctk
 from tkinter import ttk, messagebox
 import re
 from controladores.controladorAbastecimento import ControladorAbastecimento
+from controladores.controladorUsuario import ControladorUsuario
 
 class TelaRelatorios(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.controladorAbastecimento = ControladorAbastecimento()
+        self.controladorUsuario = ControladorUsuario()
         self.criar_tela_relatorios()
 
     def criar_tela_relatorios(self): 
@@ -120,7 +122,7 @@ class TelaRelatorios(ctk.CTkFrame):
             self.mostra_mensagem(f"Erro ao buscar abastecimentos: {e}", tipo='erro')
 
     def calcular_totais(self, abastecimentos):
-        total_vendas = sum([abastecimento[6] * abastecimento[5] for abastecimento in abastecimentos])
+        total_vendas = sum([abastecimento[6] for abastecimento in abastecimentos])
         total_litros = sum([abastecimento[5] for abastecimento in abastecimentos])
         return total_vendas, total_litros
 
