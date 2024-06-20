@@ -28,12 +28,13 @@ class ControladorAbastecimento:
 
     #Falta incluir o cpf do funcionário
 
-    def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros):
+    def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario):
+
         # Verificar dados do abastecimento
         self.verificar_abastecimento(idBomba, tipoCombustivel, float(preco), float(litros))
         
         # Criar objeto Abastecimento
-        abastecimento = Abastecimento(idBomba, tipoCombustivel, data, float(preco), float(litros))
+        abastecimento = Abastecimento(idBomba, tipoCombustivel, data, float(preco), float(litros), cpf_funcionario)
         
         # Atualizar a capacidade do tanque
         bomba = self.controlador_bomba.buscar_bomba(idBomba)
@@ -45,8 +46,8 @@ class ControladorAbastecimento:
         try:
             with self.conn:
                 self.cursor.execute(
-                    "INSERT INTO Abastecimentos (idBomba, data, litros, Preco, tipoCombustivel) VALUES (?, ?, ?, ?, ?)",
-                    (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel)
+                    "INSERT INTO Abastecimentos (idBomba, data, litros, Preco, tipoCombustivel,cpfFuncionario) VALUES (?, ?, ?, ?, ?,?)",
+                    (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel, abastecimento.cpf_funcionario)
                 )
                 self.conn.commit()
                 return True

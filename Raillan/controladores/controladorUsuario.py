@@ -83,14 +83,14 @@ class ControladorUsuario:
     def login_cpf(self, cpf, senha):
         
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        self.cursor.execute("SELECT nome, isgestor FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash))
+        self.cursor.execute("SELECT nome, isgestor, cpfFuncionario FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash))
         return self.cursor.fetchone()
     
     def login_email(self, email, senha):
         if email == "admin" and senha == "":
-            return ("admin", True)
+            return ("admin", True,"86133880511")
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        self.cursor.execute("SELECT nome, isgestor FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash))
+        self.cursor.execute("SELECT nome, isgestor, cpfFuncionario FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash))
         return self.cursor.fetchone()
     
 
