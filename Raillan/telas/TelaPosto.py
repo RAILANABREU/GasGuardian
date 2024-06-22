@@ -190,4 +190,3 @@ class TelaPosto(ctk.CTkFrame):
         # Inserir novos dados na tabela
         for index, row in enumerate(posto):
             self.tree.insert('', 'end', values=row, tags=('evenrow' if index % 2 == 0 else 'oddrow'))
-

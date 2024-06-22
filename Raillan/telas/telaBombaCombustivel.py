@@ -97,7 +97,6 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             self.btn_alterar.configure(state=tk.DISABLED)
             self.btn_excluir.configure(state=tk.DISABLED)
 
-
     def tela_alterar_bomba(self):
         if self.selected_row:
             self.modal_alterar_bomba(self.selected_row)
