@@ -148,7 +148,7 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
             
             if label == "Combustível":
                 self.combustivel_var = tk.StringVar(value=dados_tanque[i])
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, values=nomes_combustiveis)
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, values=nomes_combustiveis, state='readonly')
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)
@@ -264,7 +264,7 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
 
             if label == "Combustível":
                 self.combustivel_var = tk.StringVar()
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, values=nomes_combustiveis)
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, values=nomes_combustiveis, state='readonly')
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)
@@ -321,10 +321,3 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
     def centralize_modal(self, modal, width, height):
         modal.geometry(f"{width}x{height}+{(modal.winfo_screenwidth()//2) - (width//2)}+{(modal.winfo_screenheight()//2) - (height//2)}")
 
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.geometry("1200x800")
-    app = TelaTanqueCombustivel(root)
-    app.pack(fill="both", expand=True)
-    root.mainloop()

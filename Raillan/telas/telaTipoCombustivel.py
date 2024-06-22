@@ -216,11 +216,3 @@ class TelaTipoCombustivel(ctk.CTkFrame):
             return True
         except ValueError:
             return False
-
-
-if __name__ == '__main__':
-    root = ctk.CTk()
-    root.geometry("1200x800")
-    app = TelaTipoCombustivel(root)
-    app.pack(fill="both", expand=True)
-    app.mainloop()

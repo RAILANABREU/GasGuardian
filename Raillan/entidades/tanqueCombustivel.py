@@ -17,7 +17,6 @@ class TanqueCombustivel:
     def nome(self, value):
         self.__nome = value
 
-    
     @property
     def capacidadeMaxima(self):
         return self.__capacidadeMaxima

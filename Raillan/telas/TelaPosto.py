@@ -50,7 +50,6 @@ class TelaPosto(ctk.CTkFrame):
 
         self.criar_tabela(posto, self.cabecalhos)
 
-   
     def criar_tabela(self, dados, cabecalhos):
         # Formatar dados antes de inseri-los no Treeview
 
@@ -102,7 +101,6 @@ class TelaPosto(ctk.CTkFrame):
             self.selected_row = None
             self.btn_alterar.configure(state=tk.DISABLED)
 
-
     def clear_frame(self):
         for widget in self.winfo_children():
             widget.destroy()
@@ -141,7 +139,6 @@ class TelaPosto(ctk.CTkFrame):
 
     def centralize_modal(self, modal, width, height):
         modal.geometry(f"{width}x{height}+{(modal.winfo_screenwidth()//2) - (width//2)}+{(modal.winfo_screenheight()//2) - (height//2)}")
-
 
     def tela_alterar_posto(self):
         if not self.selected_row:
@@ -193,12 +190,3 @@ class TelaPosto(ctk.CTkFrame):
         # Inserir novos dados na tabela
         for index, row in enumerate(posto):
             self.tree.insert('', 'end', values=row, tags=('evenrow' if index % 2 == 0 else 'oddrow'))
-
-        
-
-if __name__ == '__main__':
-    root = ctk.CTk()
-    root.geometry("1200x800")
-    app = TelaPosto(root)
-    app.pack(fill="both", expand=True)
-    app.mainloop()

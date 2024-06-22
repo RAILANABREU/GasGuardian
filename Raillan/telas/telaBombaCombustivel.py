@@ -97,7 +97,6 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             self.btn_alterar.configure(state=tk.DISABLED)
             self.btn_excluir.configure(state=tk.DISABLED)
 
-
     def tela_alterar_bomba(self):
         if self.selected_row:
             self.modal_alterar_bomba(self.selected_row)
@@ -135,7 +134,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar(value=dados_bomba[2])
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='disabled', values=list(nomes_combustiveis.values()))
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='readonly', values=list(nomes_combustiveis.values()))
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar(value=dados_bomba[4])
@@ -280,7 +279,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar()
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='disabled', values=list(nomes_combustiveis.values()))
+                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='readonly', values=list(nomes_combustiveis.values()))
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar()
                 entry = ttk.Combobox(self.modal, textvariable=self.tanque_var, values=list(nomes_tanques.keys()))
@@ -339,11 +338,3 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             self.pesquisar()
         except Exception as e:
             self.mostra_mensagem(f"Erro ao cadastrar a nova bomba: {e}", tipo='erro')
-
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.geometry("1200x800")
-    app = TelaBombaCombustivel(root)
-    app.pack(fill="both", expand=True)
-    root.mainloop()

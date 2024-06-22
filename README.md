@@ -14,6 +14,8 @@
 ### Instalação
 ```bash
 pip install customtkinter
+sudo apt install python3-tk
+pip install --upgrade Pillow
 ```
 
 ## Instruções de Uso

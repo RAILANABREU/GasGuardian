@@ -3,11 +3,15 @@ import customtkinter as ctk
 from tkinter import ttk, messagebox
 import re
 from controladores.controladorAbastecimento import ControladorAbastecimento
+from controladores.controladorUsuario import ControladorUsuario
 
 class TelaRelatorios(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.controladorAbastecimento = ControladorAbastecimento()
+        self.controladorUsuario = ControladorUsuario()
+        self.usuarios = [("Todos", None)] + self.controladorUsuario.buscar_nomes_usuarios()
+
         self.criar_tela_relatorios()
 
     def criar_tela_relatorios(self): 
@@ -35,13 +39,14 @@ class TelaRelatorios(ctk.CTkFrame):
         self.data_fim.bind("<KeyRelease>", self.format_data)
         
         # Funcionario filter
-        ctk.CTkLabel(filters_frame, text="CPF Funcionario:").pack(side="left", padx=5)
-        self.cpf_funcionario = ctk.CTkEntry(filters_frame)
-        self.cpf_funcionario.pack(side="left", padx=5)
-        self.cpf_funcionario.bind("<KeyRelease>", self.format_cpf)
+        ctk.CTkLabel(filters_frame, text="Funcionário:").pack(side="left", padx=5)
+        self.funcionario_combobox = ctk.CTkComboBox(filters_frame, values=["Todos"] + [nome for nome, cpf in self.usuarios if cpf])
+        self.funcionario_combobox.pack(side="left", padx=5)
+        self.funcionario_combobox.set("Todos")
+        self.funcionario_combobox.configure(state="readonly")  # Torna o combobox somente leitura
         
         # Button to list all abastecimentos
-        ctk.CTkButton(filters_frame, text="Pesquisar", command=self.pesquisar_abastecimento, font=("Arial", 15, "bold")).pack(side="left", padx=10)
+        ctk.CTkButton(filters_frame, text="Pesquisar", command=self.pesquisar_abastecimento, font=("Arial", 15, "bold")).pack(side="right")
 
         # Treeview container
         self.tree_container = ctk.CTkFrame(main_frame)
@@ -89,38 +94,34 @@ class TelaRelatorios(ctk.CTkFrame):
     def pesquisar_abastecimento(self):
         data_inicio = self.data_inicio.get()
         data_fim = self.data_fim.get()
-        cpf_funcionario = self.cpf_funcionario.get()
+        funcionario_selecionado = self.funcionario_combobox.get()
+
+        cpf_funcionario = next((cpf for nome, cpf in self.usuarios if nome == funcionario_selecionado), None)
 
         try:
-
             if cpf_funcionario and data_inicio and data_fim:
-                abastecimentos = self.controladorAbastecimento.listar_abastecimentos_por_funcionario_e_periodo(
-                    cpf_funcionario, self.formatar_data(data_inicio), self.formatar_data(data_fim))
-                total_vendas, total_litros = self.calcular_totais(abastecimentos)
+                abastecimentos = self.controladorAbastecimento.listar_abastecimentos_por_funcionario_e_periodo(cpf_funcionario, self.formatar_data(data_inicio), self.formatar_data(data_fim))
             elif data_inicio and data_fim:
-                abastecimentos = self.controladorAbastecimento.listar_abastecimentos_por_periodo(
-                    self.formatar_data(data_inicio), self.formatar_data(data_fim))
-                total_vendas, total_litros = self.controladorAbastecimento.calcular_totais(
-                    self.formatar_data(data_inicio), self.formatar_data(data_fim))
+                abastecimentos = self.controladorAbastecimento.listar_abastecimentos_por_periodo(self.formatar_data(data_inicio), self.formatar_data(data_fim))
             elif cpf_funcionario:
                 abastecimentos = self.controladorAbastecimento.listar_abastecimentos_por_funcionario(cpf_funcionario)
-                total_vendas, total_litros = self.calcular_totais(abastecimentos)
             else:
                 abastecimentos = self.controladorAbastecimento.listar_abastecimentos()
-                total_vendas, total_litros = self.controladorAbastecimento.calcular_totais()
-            
+
             if not abastecimentos:
                 self.mostra_mensagem("Nenhum abastecimento encontrado para os critérios fornecidos.", tipo='info')
-            
+                return
+
             cabecalhos = ["ID", "Data", "Hora", "Bomba", "Combustível", "Litros", "Valor"]
             self.criar_tabela(abastecimentos, cabecalhos)
+            total_vendas, total_litros = self.calcular_totais(abastecimentos)
             self.total_vendas_label.configure(text=f"Total de Vendas: R${total_vendas:.2f}")
             self.total_litros_label.configure(text=f"Total de Litros: {total_litros:.2f} L")
         except Exception as e:
             self.mostra_mensagem(f"Erro ao buscar abastecimentos: {e}", tipo='erro')
 
     def calcular_totais(self, abastecimentos):
-        total_vendas = sum([abastecimento[6] * abastecimento[5] for abastecimento in abastecimentos])
+        total_vendas = sum([abastecimento[6] for abastecimento in abastecimentos])
         total_litros = sum([abastecimento[5] for abastecimento in abastecimentos])
         return total_vendas, total_litros
 

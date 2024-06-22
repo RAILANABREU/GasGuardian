@@ -1,7 +1,7 @@
 from entidades.usuario import Usuario
+from entidades.sessao import Sessao
 import sqlite3
 import hashlib
-import os
 import re
 
 class ControladorUsuario:
@@ -81,19 +81,23 @@ class ControladorUsuario:
             raise ValueError("Erro ao alterar senha.")
         
     def login_cpf(self, cpf, senha):
-        
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        self.cursor.execute("SELECT nome, isgestor FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash))
-        return self.cursor.fetchone()
+        usuario = self.cursor.execute("SELECT nome, isgestor, cpfFuncionario FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash)).fetchone()
+        if usuario:
+            Sessao.iniciar_sessao(usuario)
+        return usuario
     
     def login_email(self, email, senha):
         if email == "admin" and senha == "":
-            return ("admin", True)
-        senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        self.cursor.execute("SELECT nome, isgestor FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash))
-        return self.cursor.fetchone()
-    
-
+            usuario = ("admin", True, "86133880511")
+        else:
+            senha_hash = hashlib.sha256(senha.encode()).hexdigest()
+            usuario = self.cursor.execute("SELECT nome, isgestor, cpfFuncionario FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash)).fetchone()
+        
+        if usuario:
+            Sessao.iniciar_sessao(usuario)
+            print(usuario)
+        return usuario
 
     def validar_dados(self, cpf, email, nome, telefone, senha):
         if not all([cpf, email, nome, telefone, senha]):
@@ -140,9 +144,15 @@ class ControladorUsuario:
         except sqlite3.Error as e:
             print(f"Erro ao atualizar o usuario: {e}")
             return False
-    
+
+    def buscar_nomes_usuarios(self):
+        self.cursor.execute("SELECT nome, cpf FROM usuarios")
+        return self.cursor.fetchall()
+
     def __del__(self):
         self.conn.close()
+
+
         
 
     

@@ -9,7 +9,6 @@ class ControladorTipoCombustivel:
         self.__tipoCombustivel = TipoCombustivel
         self.conn.commit()
 
-
     def adicionar_tipo_combustivel(self, nome: str, preco: float):
         tipoCombustivel = TipoCombustivel(nome, preco)
         if not isinstance(tipoCombustivel, TipoCombustivel):
@@ -35,13 +34,11 @@ class ControladorTipoCombustivel:
         self.cursor.execute("SELECT * FROM TipoCombustivel WHERE nome = ?", (nome,))
         return self.cursor.fetchone()
 
-    
     def remover_tipo_combustivel(self, nome: str):
         with self.conn:
             self.cursor.execute("DELETE FROM TipoCombustivel WHERE nome = ?", (nome,))
             return self.cursor.rowcount > 0
         
-    
     def atualizar_tipo_combustivel(self, nome: str, preco: float):
         tipoCombustivel = TipoCombustivel(nome, preco)
         try:

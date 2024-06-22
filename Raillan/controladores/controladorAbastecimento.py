@@ -16,26 +16,28 @@ class ControladorAbastecimento:
         self.conn.commit()
 
     def verificar_abastecimento(self, idBomba, tipoCombustivel, preco, litros):
-        # Verificar se a bomba está ativa
+
+        if preco <= 0:
+            raise Exception("O valor do abastecimento deve ser maior que zero.")
+        
         bomba = self.controlador_bomba.buscar_bomba(idBomba)
-        print(bomba)
-        if not bomba or not bomba[3]:
-            raise Exception("A bomba selecionada não está ativa.")
-
-
-        # Verificar se o tanque tem capacidade para o abastecimento
+        if not bomba:
+            raise Exception("Bomba não encontrada.")
+        
         tanque = self.controlador_tanque_combustivel.buscar_tanque(bomba[5])
         if not tanque or tanque[4] < litros:
             raise Exception("O tanque não tem capacidade suficiente para o abastecimento solicitado.")
 
         return True
 
-    def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros):
+    def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario):
+        print(idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario)
+
         # Verificar dados do abastecimento
         self.verificar_abastecimento(idBomba, tipoCombustivel, float(preco), float(litros))
         
         # Criar objeto Abastecimento
-        abastecimento = Abastecimento(idBomba, tipoCombustivel, data, float(preco), float(litros))
+        abastecimento = Abastecimento(idBomba, tipoCombustivel, data, float(preco), float(litros), cpf_funcionario)
         
         # Atualizar a capacidade do tanque
         bomba = self.controlador_bomba.buscar_bomba(idBomba)
@@ -47,13 +49,13 @@ class ControladorAbastecimento:
         try:
             with self.conn:
                 self.cursor.execute(
-                    "INSERT INTO Abastecimentos (idBomba, data, litros, Preco, tipoCombustivel) VALUES (?, ?, ?, ?, ?)",
-                    (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel)
+                    "INSERT INTO Abastecimentos (idBomba, data, litros, Preco, tipoCombustivel,cpfFuncionario) VALUES (?, ?, ?, ?, ?,?)",
+                    (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel, abastecimento.cpf_funcionario)
                 )
                 self.conn.commit()
                 return True
         except sqlite3.IntegrityError as e:
-            raise ValueError(f"Erro ao registrar Abastecimento: {e}")
+            raise ValueError(f"erro ao registrar Abastecimento: {e}")
         return True
 
     def listar_abastecimentos(self):
