@@ -1,13 +1,13 @@
 from entidades.tipoCombustivel import TipoCombustivel
 
 class Abastecimento:
-    def __init__(self, idBomba: str, tipoCombustivel: str , data: str, preco: float, litros: float, cpf_funcionario):
+    def __init__(self, idBomba: str, tipoCombustivel: str , data: str, preco: float, litros: float, cpfFuncionario):
         self.__idBomba = idBomba
         self.__tipoCombustivel = tipoCombustivel
         self.__data = data
         self.__litros = litros
         self.__preco = preco
-        self.__cpf_funcionario  = cpf_funcionario
+        self.__cpfFuncionario  = cpfFuncionario
 
     @property
     def idBomba(self):
@@ -42,11 +42,11 @@ class Abastecimento:
         self.__data = value
 
     @property
-    def cpf_funcionario(self):
-        return self.__cpf_funcionario
+    def cpfFuncionario(self):
+        return self.__cpfFuncionario
 
-    @cpf_funcionario.setter
-    def cpf_funcionario(self, value):
-        self.__cpf_funcionario = value
+    @cpfFuncionario.setter
+    def cpfFuncionario(self, value):
+        self.__cpfFuncionario = value
 
     

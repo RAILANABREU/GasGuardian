@@ -30,14 +30,14 @@ class ControladorAbastecimento:
 
         return True
 
-    def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario):
-        print(idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario)
+    def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros, cpfFuncionario):
+        print(idBomba, tipoCombustivel, data, preco, litros, cpfFuncionario)
 
         # Verificar dados do abastecimento
         self.verificar_abastecimento(idBomba, tipoCombustivel, float(preco), float(litros))
         
         # Criar objeto Abastecimento
-        abastecimento = Abastecimento(idBomba, tipoCombustivel, data, float(preco), float(litros), cpf_funcionario)
+        abastecimento = Abastecimento(idBomba, tipoCombustivel, data, float(preco), float(litros), cpfFuncionario)
         
         # Atualizar a capacidade do tanque
         bomba = self.controlador_bomba.buscar_bomba(idBomba)
@@ -50,7 +50,7 @@ class ControladorAbastecimento:
             with self.conn:
                 self.cursor.execute(
                     "INSERT INTO Abastecimentos (idBomba, data, litros, Preco, tipoCombustivel,cpfFuncionario) VALUES (?, ?, ?, ?, ?,?)",
-                    (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel, abastecimento.cpf_funcionario)
+                    (abastecimento.idBomba, abastecimento.data, abastecimento.litros, abastecimento.preco, abastecimento.tipoCombustivel, abastecimento.cpfFuncionario)
                 )
                 self.conn.commit()
                 return True
@@ -96,7 +96,7 @@ class ControladorAbastecimento:
         
         return self.cursor.fetchall()
 
-    def listar_abastecimentos_por_funcionario(self, cpf_funcionario):
+    def listar_abastecimentos_por_funcionario(self, cpfFuncionario):
         self.cursor.execute("""
             SELECT 
                 a.id AS ID, 
@@ -112,11 +112,11 @@ class ControladorAbastecimento:
                 Bombas b ON a.idBomba = b.id
             WHERE
                 a.cpfFuncionario = ?
-        """, (cpf_funcionario,))
+        """, (cpfFuncionario,))
         
         return self.cursor.fetchall()
     
-    def listar_abastecimentos_por_funcionario_e_periodo(self, cpf_funcionario, data_inicio, data_fim):
+    def listar_abastecimentos_por_funcionario_e_periodo(self, cpfFuncionario, data_inicio, data_fim):
         self.cursor.execute("""
             SELECT 
                 a.id AS ID, 
@@ -132,7 +132,7 @@ class ControladorAbastecimento:
                 Bombas b ON a.idBomba = b.id
             WHERE
                 a.cpfFuncionario = ? AND date(a.data) BETWEEN ? AND ?
-        """, (cpf_funcionario, data_inicio, data_fim))
+        """, (cpfFuncionario, data_inicio, data_fim))
         
         return self.cursor.fetchall()
 
