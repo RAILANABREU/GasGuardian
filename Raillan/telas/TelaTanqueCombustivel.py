@@ -321,10 +321,3 @@ class TelaTanqueCombustivel(ctk.CTkFrame):
     def centralize_modal(self, modal, width, height):
         modal.geometry(f"{width}x{height}+{(modal.winfo_screenwidth()//2) - (width//2)}+{(modal.winfo_screenheight()//2) - (height//2)}")
 
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.geometry("1200x800")
-    app = TelaTanqueCombustivel(root)
-    app.pack(fill="both", expand=True)
-    root.mainloop()

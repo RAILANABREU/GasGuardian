@@ -30,8 +30,6 @@ class ControladorAbastecimento:
 
         return True
 
-    #Falta incluir o cpf do funcionário
-
     def adicionar_abastecimento(self, idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario):
         print(idBomba, tipoCombustivel, data, preco, litros, cpf_funcionario)
 

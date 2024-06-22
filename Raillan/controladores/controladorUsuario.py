@@ -99,7 +99,6 @@ class ControladorUsuario:
             print(usuario)
         return usuario
 
-
     def validar_dados(self, cpf, email, nome, telefone, senha):
         if not all([cpf, email, nome, telefone, senha]):
             raise ValueError("Todos os campos são obrigatórios.")

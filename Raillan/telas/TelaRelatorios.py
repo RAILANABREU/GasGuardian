@@ -120,7 +120,6 @@ class TelaRelatorios(ctk.CTkFrame):
         except Exception as e:
             self.mostra_mensagem(f"Erro ao buscar abastecimentos: {e}", tipo='erro')
 
-
     def calcular_totais(self, abastecimentos):
         total_vendas = sum([abastecimento[6] for abastecimento in abastecimentos])
         total_litros = sum([abastecimento[5] for abastecimento in abastecimentos])

@@ -339,11 +339,3 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             self.pesquisar()
         except Exception as e:
             self.mostra_mensagem(f"Erro ao cadastrar a nova bomba: {e}", tipo='erro')
-
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.geometry("1200x800")
-    app = TelaBombaCombustivel(root)
-    app.pack(fill="both", expand=True)
-    root.mainloop()
