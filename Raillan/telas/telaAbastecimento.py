@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from controladores.controladorTipoCombustivel import ControladorTipoCombustivel
-from controladores.controladorTanqueCombustivel import ControladorTanqueCombustivel
 from controladores.controladorBombaCombustivel import ControladorBombaCombustivel
 from controladores.controladorAbastecimento import ControladorAbastecimento
 from entidades.sessao import Sessao
@@ -13,8 +11,6 @@ class TelaAbastecimento(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.controladorBombaCombustivel = ControladorBombaCombustivel()
-        self.controladorTipoCombustivel = ControladorTipoCombustivel()
-        self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.controladorAbastecimento = ControladorAbastecimento()
         self.cpf_funcionario = Sessao.get_usuario_logado()[2]
 
@@ -130,11 +126,6 @@ class TelaAbastecimento(tk.Frame):
 
     def salvar_abastecimento(self):
         nomeBomba = self.entries["Bomba"].get()
-
-        if not nomeBomba:
-            self.mostra_mensagem("Selecione uma bomba válida!", tipo='erro')
-            return
-
         idBomba = dados_bomba[nomeBomba]
         tipoCombustivel = self.combustivel_var.get()
         data = datetime.now()

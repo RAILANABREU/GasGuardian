@@ -6,7 +6,6 @@ class ControladorTanqueCombustivel:
     def __init__(self):
         self.conn = sqlite3.connect('Raillan/dados/DADOS.sqlite')
         self.cursor = self.conn.cursor()
-        self.__tanque = TanqueCombustivel
         self.conn.commit()
 
     @property

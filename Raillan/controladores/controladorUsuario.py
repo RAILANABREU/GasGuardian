@@ -9,7 +9,6 @@ class ControladorUsuario:
         # Conectar ao banco de dados
         self.conn = sqlite3.connect('Raillan/dados/DADOS.sqlite')
         self.cursor = self.conn.cursor()
-        self.__usuario = Usuario
         self.conn.commit()
 
     @property

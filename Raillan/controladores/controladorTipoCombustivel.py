@@ -6,7 +6,6 @@ class ControladorTipoCombustivel:
     def __init__(self):
         self.conn = sqlite3.connect('Raillan/dados/DADOS.sqlite')
         self.cursor = self.conn.cursor()
-        self.__tipoCombustivel = TipoCombustivel
         self.conn.commit()
 
     def adicionar_tipo_combustivel(self, nome: str, preco: float):

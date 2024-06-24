@@ -1,5 +1,4 @@
 from controladores.controladorBombaCombustivel import ControladorBombaCombustivel
-from controladores.controladorTipoCombustivel import ControladorTipoCombustivel
 from controladores.controladorTanqueCombustivel import ControladorTanqueCombustivel
 import customtkinter as ctk
 import tkinter as tk
@@ -11,7 +10,6 @@ class TelaBombaCombustivel(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.controladorBombaCombustivel = ControladorBombaCombustivel()
-        self.controladorTipoCombustivel = ControladorTipoCombustivel()
         self.controladorTanqueCombustivel = ControladorTanqueCombustivel()
         self.selected_row = None
         self.cabecalhos = ["Nome", "Auto Abastecimento", "Tipo de Combustível", "Bomba Ativa", "Tanque Nome"]
