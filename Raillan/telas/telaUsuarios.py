@@ -122,7 +122,7 @@ class TelaUsuario(ctk.CTkFrame):
             lbl.grid(row=i+1, column=0, padx=10, pady=5, sticky='e')
 
             if label == "É Gestor":
-                self.is_gestor_var = ctk.StringVar(value="0")
+                self.is_gestor_var = ctk.StringVar(value=dados_usuario[4])
                 entry = ctk.CTkSwitch(self.modal, text="", variable=self.is_gestor_var, onvalue="1", offvalue="0")
             else:
                 entry = ctk.CTkEntry(self.modal, width=120)

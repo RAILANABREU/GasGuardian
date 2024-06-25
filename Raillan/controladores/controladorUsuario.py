@@ -24,7 +24,7 @@ class ControladorUsuario:
 
     def listar_usuarios(self):
         # Listar todas as usuarios do banco de dados
-        self.cursor.execute("SELECT nome, cpf, telefone, email FROM Usuarios")
+        self.cursor.execute("SELECT nome, cpf, telefone, email, isGestor FROM Usuarios")
         return self.cursor.fetchall()
     
     def buscar_usuario(self, cpf):
