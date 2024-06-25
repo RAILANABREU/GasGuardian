@@ -87,6 +87,7 @@ class ControladorUsuario:
         return usuario
     
     def login_email(self, email, senha):
+        email = email.lower()
         if email == "admin" and senha == "":
             usuario = ("admin", True, "86133880511")
         else:
