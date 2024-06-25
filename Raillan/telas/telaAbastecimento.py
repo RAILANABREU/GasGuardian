@@ -126,16 +126,17 @@ class TelaAbastecimento(tk.Frame):
 
     def salvar_abastecimento(self):
         nomeBomba = self.entries["Bomba"].get()
-        idBomba = dados_bomba[nomeBomba]
         tipoCombustivel = self.combustivel_var.get()
         data = datetime.now()
         data_formatada = data.strftime("%Y-%m-%d %H:%M:%S")
         preco = self.entries["Preço"].get()
         litros = self.entries["Litros abastecidos"].get()
 
-        if not nomeBomba or not tipoCombustivel or not preco:
+        if not nomeBomba or not tipoCombustivel or not preco or not litros:
             self.mostra_mensagem("Todos os campos devem ser preenchidos!", tipo='erro')
             return
+        
+        idBomba = dados_bomba[nomeBomba]
 
         try:
             resultado = self.controladorAbastecimento.adicionar_abastecimento(idBomba, tipoCombustivel, data_formatada, preco, litros, self.cpf_funcionario)
