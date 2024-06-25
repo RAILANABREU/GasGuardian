@@ -63,6 +63,9 @@ class ControladorTanqueCombustivel:
 
     def renovar_estoque(self, identificadorTanque, abastecimento):
         try:
+
+            if abastecimento <= 0:
+                raise ValueError("Operação não realizada: o volume de abastecimento deve ser maior que zero.")
             # Obter o volume atual e a capacidade máxima do tanque
             self.cursor.execute("SELECT volumeAtual, capacidadeMaxima FROM Tanques WHERE id = ?", (identificadorTanque,))
             resultado = self.cursor.fetchone()
