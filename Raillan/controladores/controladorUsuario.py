@@ -81,7 +81,7 @@ class ControladorUsuario:
         
     def login_cpf(self, cpf, senha):
         senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-        usuario = self.cursor.execute("SELECT nome, isgestor, cpfFuncionario FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash)).fetchone()
+        usuario = self.cursor.execute("SELECT nome, isgestor, cpf FROM usuarios WHERE cpf = ? AND senha = ?", (cpf, senha_hash)).fetchone()
         if usuario:
             Sessao.iniciar_sessao(usuario)
         return usuario
@@ -91,7 +91,7 @@ class ControladorUsuario:
             usuario = ("admin", True, "86133880511")
         else:
             senha_hash = hashlib.sha256(senha.encode()).hexdigest()
-            usuario = self.cursor.execute("SELECT nome, isgestor, cpfFuncionario FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash)).fetchone()
+            usuario = self.cursor.execute("SELECT nome, isgestor, cpf FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash)).fetchone()
         
         if usuario:
             Sessao.iniciar_sessao(usuario)

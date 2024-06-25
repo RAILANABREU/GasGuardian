@@ -21,8 +21,7 @@ class ControladorAbastecimento:
             raise Exception("O valor do abastecimento deve ser maior que zero.")
         
         bomba = self.controlador_bomba.buscar_bomba(idBomba)
-        if not bomba:
-            raise Exception("Bomba não encontrada.")
+
         
         tanque = self.controlador_tanque_combustivel.buscar_tanque(bomba[5])
         if not tanque or tanque[4] < litros:
