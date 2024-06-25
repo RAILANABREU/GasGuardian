@@ -11,7 +11,7 @@ class TelaUsuario(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.selected_row = None
-        self.cabecalhos = ["Nome", "CPF", "Email", "Telefone"]
+        self.cabecalhos = ["Nome", "CPF", "Telefone", "Email"]
         self.controladorUsuario = ControladorUsuario()
         self.Criar_tela_usuario()
 

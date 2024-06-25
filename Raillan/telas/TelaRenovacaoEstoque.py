@@ -71,17 +71,19 @@ class TelaRenovacaoEstoque(ctk.CTkFrame):
             return
 
         # Widgets para exibir informações (campos desabilitados para edição)
-        tanque_id_label = ctk.CTkLabel(modal, text="ID do Tanque")
+        tanque_id_label = ctk.CTkLabel(modal, text="Nome do Tanque")
         tanque_id_label.pack()
-        tanque_id_entry = ctk.CTkEntry(modal, state='disabled', width=200, height=30)
+        tanque_id_entry = ctk.CTkEntry(modal, width=200, height=30)
         tanque_id_entry.pack(pady=5)
         tanque_id_entry.insert(0, tanque[5])
+        tanque_id_entry.configure(state='disabled')  # Desabilita a edição após inserir o texto
 
         combustivel_label = ctk.CTkLabel(modal, text="Combustível")
         combustivel_label.pack()
-        combustivel_entry = ctk.CTkEntry(modal, state='disabled', width=200, height=30)
+        combustivel_entry = ctk.CTkEntry(modal, width=200, height=30)
         combustivel_entry.pack(pady=5)
         combustivel_entry.insert(0, tanque[3])
+        combustivel_entry.configure(state='disabled')  # Desabilita a edição após inserir o texto
 
         # Campo de entrada para a quantidade de abastecimento
         entrada_abastecimento_label = ctk.CTkLabel(modal, text="Quantidade de Abastecimento")
@@ -108,8 +110,8 @@ class TelaRenovacaoEstoque(ctk.CTkFrame):
             self.mostra_mensagem("Abastecimento realizado com sucesso!", tipo='info')
             modal.destroy()  # Fecha o modal após confirmar o abastecimento
             self.criar_tela_renovacao_estoque()  # Atualiza a tela principal
-        except ValueError:
-            self.mostra_mensagem("Quantidade inválida!", tipo='erro')
+        except Exception as e:
+            self.mostra_mensagem(f"Erro: {e}", tipo='erro')
 
     def mostra_mensagem(self, mensagem, tipo='erro'):
         if tipo == 'erro':
