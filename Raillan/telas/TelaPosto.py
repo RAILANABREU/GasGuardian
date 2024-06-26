@@ -93,7 +93,6 @@ class TelaPosto(ctk.CTkFrame):
 
     def on_row_select(self, event):
         selected_item = self.tree.selection()
-        print(selected_item,"item selecionado")
         if selected_item:
             self.selected_row = self.tree.item(selected_item[0], "values")
             self.btn_alterar.configure(state=tk.NORMAL)

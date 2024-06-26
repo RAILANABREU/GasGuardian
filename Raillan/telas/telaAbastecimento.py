@@ -15,7 +15,6 @@ class TelaAbastecimento(tk.Frame):
         self.cpf_funcionario = Sessao.get_usuario_logado()[2]
 
         self.create_main_button()
-        print(self.cpf_funcionario)
 
     def mostra_mensagem(self, mensagem, tipo='erro'):
         if tipo == 'erro':
@@ -143,5 +142,4 @@ class TelaAbastecimento(tk.Frame):
             self.mostra_mensagem("Abastecimento registrado com sucesso!", tipo='info')
             self.modal.destroy()
         except Exception as e:
-            print(Exception, e)
             self.mostra_mensagem(f"Erro ao registrar abastecimento: {e}", tipo='erro')

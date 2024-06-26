@@ -90,6 +90,7 @@ class ControladorBombaCombustivel:
         try:
             with self.conn:
                 self.cursor.execute("UPDATE Bombas SET bombaAtiva = 0 WHERE id = ?", (identificadorBomba,))
+                # self.cursor.execute("DELETE FROM Bombas WHERE id = ?", (identificadorBomba,)) caso for exluir a bomba, mas para manter registro decidi apenas inativar.
                 return self.cursor.rowcount > 0
         except sqlite3.Error as e:
             return False

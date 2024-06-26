@@ -268,7 +268,7 @@ class TelaUsuario(ctk.CTkFrame):
             return
 
         try:
-            print(nome, cpf, email, telefone, senha, is_gestor)
+
             resultado = self.controladorUsuario.adicionar_usuario( cpf, email, nome, telefone, senha, is_gestor)
             if resultado:
                 self.mostra_mensagem("Novo usuário cadastrado com sucesso!", tipo='info')

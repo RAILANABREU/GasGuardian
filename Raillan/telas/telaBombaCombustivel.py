@@ -38,7 +38,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         self.btn_alterar = ctk.CTkButton(btn_frame, text="Alterar", command=self.tela_alterar_bomba, state=tk.DISABLED)
         self.btn_alterar.pack(side="left", padx=5,pady=10)
 
-        self.btn_excluir = ctk.CTkButton(btn_frame, text="Excluir", command=self.tela_excluir_bomba, state=tk.DISABLED)
+        self.btn_excluir = ctk.CTkButton(btn_frame, text="Inativar", command=self.tela_excluir_bomba, state=tk.DISABLED)
         self.btn_excluir.pack(side="left", padx=5, pady=10)
 
         try:
