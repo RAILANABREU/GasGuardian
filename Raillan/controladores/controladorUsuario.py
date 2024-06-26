@@ -131,6 +131,15 @@ class ControladorUsuario:
 
     def atualizar_usuario(self, cpf, email, nome, telefone, isGestor):
 
+        # Verificação de email
+        email_regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not re.match(email_regex, email):
+            raise ValueError("Email inválido. Formato esperado: exemplo@dominio.com")
+
+        self.cursor.execute("SELECT * FROM usuarios WHERE email = ? and cpf != ?", (email,cpf))
+        if self.cursor.fetchone():
+            raise ValueError("Email já cadastrado.")
+
         try:
             with self.conn:
                 self.cursor.execute("UPDATE usuarios SET email = ?, nome = ?, telefone = ?, isGestor = ? WHERE cpf = ?",
