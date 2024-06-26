@@ -64,9 +64,8 @@ class ControladorTanqueCombustivel:
     def renovar_estoque(self, identificadorTanque, abastecimento):
         if abastecimento <= 0:
             raise Exception("O volume de abastecimento deve ser maior que zero.")
-       
-        try:
     
+        try:
             # Obter o volume atual e a capacidade máxima do tanque
             self.cursor.execute("SELECT volumeAtual, capacidadeMaxima FROM Tanques WHERE id = ?", (identificadorTanque,))
             resultado = self.cursor.fetchone()
@@ -77,7 +76,7 @@ class ControladorTanqueCombustivel:
                 
                 # Verificar se o novo volume excede a capacidade máxima do tanque
                 if novo_volume > capacidade_maxima:
-                    raise ValueError("Operação não realizada: o volume de abastecimento excede a capacidade máxima do tanque.")
+                    raise Exception("Operação não realizada: o volume de abastecimento excede a capacidade máxima do tanque.")
                 
                 # Atualizar o volume do tanque
                 with self.conn:
@@ -88,14 +87,11 @@ class ControladorTanqueCombustivel:
                         print("Tanque atualizado com sucesso!")
                         return True
                     else:
-                        print("Nenhum tanque encontrado com o identificador fornecido.")
-                        return False
+                        raise Exception("Nenhum tanque encontrado com o identificador fornecido.")
             else:
-                print("Nenhum tanque encontrado com o identificador fornecido.")
-                return False
+                raise Exception("Nenhum tanque encontrado com o identificador fornecido.")
         except Exception as e:
-            print(f"Erro: {e}")
-            return False
+            raise  # Relança a exceção para ser tratada na função chamar
 
     def atualizar_volume_tanque(self, identificador_tanque, litros):
         try:
