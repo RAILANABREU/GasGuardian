@@ -132,7 +132,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar(value=dados_bomba[2])
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='readonly', values=list(nomes_combustiveis.values()))
+                entry = ctk.CTkEntry(self.modal, textvariable=self.combustivel_var, state='readonly')
                 entry.grid(row=i+1, column=1, padx=10, pady=5, sticky='we')
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar(value=dados_bomba[4])
@@ -214,12 +214,12 @@ class TelaBombaCombustivel(ctk.CTkFrame):
             try:
                 resultado = self.controladorBombaCombustivel.remover_bomba(identificadorBomba)
                 if resultado:
-                    self.mostra_mensagem("Bomba excluída com sucesso!", tipo='info')
+                    self.mostra_mensagem("Bomba Inativada com sucesso!", tipo='info')
                     self.pesquisar()
                 else:
-                    self.mostra_mensagem("Erro ao excluir a bomba.", tipo='erro')
+                    self.mostra_mensagem("Erro ao inativar a bomba.", tipo='erro')
             except Exception as e:
-                self.mostra_mensagem(f"Erro ao excluir a bomba: {e}", tipo='erro')
+                self.mostra_mensagem(f"Erro ao inativar a bomba: {e}", tipo='erro')
                 return
             self.btn_alterar.configure(state=tk.DISABLED)
             self.btn_excluir.configure(state=tk.DISABLED)
@@ -277,7 +277,7 @@ class TelaBombaCombustivel(ctk.CTkFrame):
 
             if label == "Tipo de Combustível":
                 self.combustivel_var = tk.StringVar()
-                entry = ttk.Combobox(self.modal, textvariable=self.combustivel_var, state='readonly', values=list(nomes_combustiveis.values()))
+                entry = ctk.CTkEntry(self.modal, textvariable=self.combustivel_var, state='readonly')
             elif label == "Tanque":
                 self.tanque_var = tk.StringVar()
                 entry = ttk.Combobox(self.modal, textvariable=self.tanque_var, values=list(nomes_tanques.keys()))

@@ -130,6 +130,7 @@ class ControladorUsuario:
         return True
 
     def atualizar_usuario(self, cpf, email, nome, telefone, isGestor):
+
         try:
             with self.conn:
                 self.cursor.execute("UPDATE usuarios SET email = ?, nome = ?, telefone = ?, isGestor = ? WHERE cpf = ?",
@@ -144,6 +145,8 @@ class ControladorUsuario:
         except sqlite3.Error as e:
             print(f"Erro ao atualizar o usuario: {e}")
             return False
+
+
 
     def buscar_nomes_usuarios(self):
         self.cursor.execute("SELECT nome, cpf FROM usuarios")
