@@ -212,6 +212,9 @@ class TelaBombaCombustivel(ctk.CTkFrame):
         if self.selected_row:
             identificadorBomba = self.selected_row[5]
             try:
+                if self.selected_row[3] == "0":
+                    self.mostra_mensagem("Bomba ja esta inativa.", tipo='erro')
+                    return
                 resultado = self.controladorBombaCombustivel.remover_bomba(identificadorBomba)
                 if resultado:
                     self.mostra_mensagem("Bomba Inativada com sucesso!", tipo='info')
